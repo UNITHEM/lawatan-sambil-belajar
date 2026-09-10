@@ -37,6 +37,32 @@
     /* Teacher */
     .teacher-shell{min-height:100vh}.teacher-hero{background:linear-gradient(135deg,#0a356a,#154f88);color:#fff;padding:30px 0}.teacher-hero .wrap{padding-top:0;padding-bottom:0}.teacher-hero h1{font-size:32px;margin:7px 0}.teacher-hero p{color:#d9eaff;margin:0}.login-card{max-width:470px;margin:60px auto;background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:28px}.login-card h2{margin:0 0 5px}.login-card p{margin:0 0 20px;color:var(--muted)}
     .teacher-stats{grid-template-columns:repeat(5,1fr);margin-top:22px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.search{flex:1;min-width:230px;border:1px solid #cdddea;border-radius:12px;padding:11px 13px}.filter{border:1px solid #cdddea;border-radius:12px;padding:11px 13px;background:#fff}.table-card{background:#fff;border:1px solid var(--line);border-radius:19px;box-shadow:var(--shadow);overflow:hidden}.table-scroll{overflow:auto}.data-table{width:100%;border-collapse:collapse;min-width:970px}.data-table th{background:#f1f6fb;color:#49647d;text-align:left;font-size:12px;padding:12px 14px;white-space:nowrap}.data-table td{border-top:1px solid #edf2f7;padding:13px 14px;font-size:13px;vertical-align:middle}.data-table tr:hover td{background:#fbfdff}.student-name{font-weight:800;color:#173b60}.badge{display:inline-flex;align-items:center;padding:6px 9px;border-radius:99px;font-size:11px;font-weight:850;white-space:nowrap}.b-green{background:var(--green-bg);color:#117340}.b-amber{background:var(--amber-bg);color:#8a5b00}.b-gray{background:#eef2f5;color:#587084}.b-blue{background:#e9f3ff;color:#145f9b}.mini-btn{border:1px solid #ccdeed;background:#fff;color:var(--navy);border-radius:9px;padding:7px 9px;font-weight:800;cursor:pointer}.mini-btn.pay{background:var(--navy);color:#fff;border-color:var(--navy)}.mini-btn.delete{background:#fff0ef;color:var(--red);border-color:#f2b8b3}.mini-btn.delete:hover{background:#fde3e0}
+    .payment-state{text-align:center;padding:8px 2px 2px}
+    .payment-state-icon{width:72px;height:72px;margin:2px auto 17px;border-radius:50%;display:grid;place-items:center;font-size:38px;font-weight:900}
+    .payment-state-icon.loading{background:#eaf4ff;border:1px solid #cfe2f3}
+    .payment-state-icon.successful{background:var(--green-bg);border:1px solid #bfe6cf;color:var(--green)}
+    .payment-state-icon.failed{background:var(--red-bg);border:1px solid #f3c6c2;color:var(--red)}
+    .payment-spinner{width:38px;height:38px;border:4px solid #cfe2f3;border-top-color:var(--navy);border-radius:50%;animation:spin .75s linear infinite}
+    .payment-state h3{margin:0 0 8px;font-size:22px;color:var(--navy)}
+    .payment-state h3.ok{color:#155f3b}
+    .payment-state h3.bad{color:var(--red)}
+    .payment-state .state-lead{margin:0 auto 17px;max-width:410px;color:var(--muted);font-size:14px;line-height:1.6}
+    .payment-summary{background:#f7fbff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin:0 0 13px;text-align:left}
+    .payment-summary-row{display:flex;justify-content:space-between;gap:15px;padding:6px 0}
+    .payment-summary-row span{color:var(--muted);font-size:13px}
+    .payment-summary-row b{color:var(--navy);text-align:right}
+    .payment-wait{background:#f4f8fc;border:1px solid var(--line);border-radius:14px;padding:12px 14px;color:#49647d;font-size:13px;line-height:1.5;text-align:left}
+    .payment-success-note{background:var(--green-bg);border:1px solid #bfe6cf;border-radius:14px;padding:12px 14px;color:#155f3b;font-size:13px;line-height:1.5;text-align:left}
+    .payment-error-note{background:var(--red-bg);border:1px solid #f3c6c2;border-radius:14px;padding:12px 14px;color:#8f2d24;font-size:13px;line-height:1.5;text-align:left}
+    .payment-state-actions{display:flex;gap:9px;margin-top:17px}
+    .payment-state-actions .btn{flex:1}
+    #paymentModal .close:disabled{opacity:.35;cursor:not-allowed}
+    @media(max-width:620px){
+      .payment-state-icon{width:66px;height:66px}
+      .payment-state h3{font-size:20px}
+      .payment-state-actions{flex-direction:column}
+    }
+
     .modal-backdrop{position:fixed;inset:0;background:rgba(7,25,42,.55);z-index:100;display:grid;place-items:center;padding:20px}.modal{width:min(590px,100%);max-height:88vh;overflow:auto;background:#fff;border-radius:22px;box-shadow:0 30px 90px rgba(0,0,0,.28)}.modal-head{padding:20px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.modal-head h3{margin:0}.close{border:0;background:#eef3f7;width:35px;height:35px;border-radius:50%;cursor:pointer;font-size:18px}.modal-body{padding:22px}.details{display:grid;grid-template-columns:1fr 1fr;gap:12px}.detail{border:1px solid var(--line);border-radius:13px;padding:12px}.detail.full{grid-column:1/-1}.detail small{display:block;color:var(--muted);font-weight:700;margin-bottom:4px}.detail b,.detail div{word-break:break-word}.pay-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}.pay-choice{border:2px solid var(--line);border-radius:15px;padding:15px;cursor:pointer;background:#fff;text-align:left}.pay-choice:hover{border-color:#8ab9dd}.pay-choice strong{display:block;font-size:18px;color:var(--navy)}.pay-choice span{font-size:12px;color:var(--muted)}
     .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
     .submit-overlay{position:fixed;inset:0;z-index:160;background:rgba(10,39,70,.34);backdrop-filter:blur(3px);display:grid;place-items:center;padding:22px}
@@ -340,7 +366,7 @@ function showTeacherLogin(){$('publicView').classList.add('hidden');$('teacherVi
 function showPublic(){$('teacherView').classList.add('hidden');$('publicView').classList.remove('hidden');window.scrollTo(0,0);loadPublicStats()}
 async function teacherLogin(){const pin=$('teacherPin').value.trim();const name=$('teacherName').value.trim();if(!name){msg('loginMsg','error','Masukkan nama guru.');return}if(!pin){msg('loginMsg','error','Masukkan PIN guru.');return}const btn=$('loginBtn');setBtn(btn,true,'Masuk Portal Guru');try{const d=await apiPost({action:'verifyTeacher',pin});if(!d.ok)throw new Error('PIN guru tidak sah.');teacherPIN=pin;currentTeacher=name;sessionStorage.setItem('teacherName',name);$('teacherWelcome').textContent=`Log masuk sebagai ${name}`;$('teacherLoginPanel').classList.add('hidden');$('teacherDashboard').classList.remove('hidden');await loadTeacherData();}catch(e){msg('loginMsg','error',e.message)}finally{setBtn(btn,false,'Masuk Portal Guru')}}
 function teacherLogout(){teacherPIN='';teacherDATA=[];currentTeacher='';$('teacherPin').value='';$('teacherDashboard').classList.add('hidden');$('teacherLoginPanel').classList.remove('hidden');msg('loginMsg','','')}
-async function loadTeacherData(){msg('teacherMsg','','');$('teacherRows').innerHTML='<tr><td colspan="8">Memuatkan data...</td></tr>';try{const d=await apiPost({action:'teacherData',pin:teacherPIN});if(!d.ok)throw new Error(d.message);teacherDATA=d.data.registrations||[];teacherSTATS=d.data.stats||{};renderStats();buildClassFilter();renderTeacherTable();}catch(e){msg('teacherMsg','error',e.message);$('teacherRows').innerHTML='<tr><td colspan="8">Gagal memuatkan data.</td></tr>'}}
+async function loadTeacherData(silent=false){if(!silent){msg('teacherMsg','','');$('teacherRows').innerHTML='<tr><td colspan="8">Memuatkan data...</td></tr>';}try{const d=await apiPost({action:'teacherData',pin:teacherPIN});if(!d.ok)throw new Error(d.message);teacherDATA=d.data.registrations||[];teacherSTATS=d.data.stats||{};renderStats();buildClassFilter();renderTeacherTable();}catch(e){if(!silent){msg('teacherMsg','error',e.message);$('teacherRows').innerHTML='<tr><td colspan="8">Gagal memuatkan data.</td></tr>';}}}
 function renderStats(){$('tRegistered').textContent=teacherDATA.length;$('tConfirmed').textContent=teacherSTATS.confirmed||0;$('tAvailable').textContent=teacherSTATS.available??74;$('tFullPaid').textContent=teacherSTATS.fullPaid||0;$('tCollected').textContent=money(teacherSTATS.totalCollected||0)}
 function buildClassFilter(){const current=$('classFilter').value;const cls=[...new Set(teacherDATA.map(x=>x.kelas).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'ms'));$('classFilter').innerHTML='<option value="ALL">Semua Kelas</option>'+cls.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');if(cls.includes(current))$('classFilter').value=current}
 function renderTeacherTable(){const q=$('searchStudent').value.trim().toLowerCase();const pf=$('paymentFilter').value;const cf=$('classFilter').value;const rows=teacherDATA.filter(r=>{const p=r.payment||{};const hay=`${r.name} ${r.kelas} ${r.parentName}`.toLowerCase();if(q&&!hay.includes(q))return false;if(cf!=='ALL'&&String(r.kelas)!==cf)return false;if(pf==='UNPAID'&&Number(p.totalPaid)!==0)return false;if(pf==='INSTALLMENT'&&Number(p.totalPaid)!==65)return false;if(pf==='FULL'&&Number(p.totalPaid)<130)return false;if(pf==='CONFIRMED'&&String(p.seatStatus)!=='CONFIRMED')return false;return true});
@@ -348,7 +374,107 @@ $('teacherRows').innerHTML=rows.length?rows.map(r=>{const p=r.payment||{};const 
 function findStudent(id){return teacherDATA.find(x=>String(x.studentId)===String(id))}
 function openDetail(id){const r=findStudent(id);if(!r)return;const p=r.payment||{};$('detailBody').innerHTML=`<div class="details"><div class="detail"><small>Nama Murid</small><b>${esc(r.name)}</b></div><div class="detail"><small>Kelas</small><b>${esc(r.kelas)}</b></div><div class="detail"><small>Nama Penjaga</small><b>${esc(r.parentName)}</b></div><div class="detail"><small>Hubungan</small><b>${esc(r.relation)}</b></div><div class="detail"><small>No. Telefon</small><b>${esc(r.phone)}</b></div><div class="detail"><small>No. Kecemasan</small><b>${esc(r.emergencyPhone||'—')}</b></div><div class="detail full"><small>Alamat Penuh</small><div>${esc(r.address)}</div></div><div class="detail"><small>Bayaran</small><b>${money(p.totalPaid||0)} / RM130</b></div><div class="detail"><small>Seat</small><b>${esc(p.bus||'Belum Confirm')} ${p.seatNo?'• Seat '+esc(p.seatNo):''}</b></div></div>`;$('detailModal').classList.remove('hidden')}
 function openPayment(id){const r=findStudent(id);if(!r)return;const p=r.payment||{},paid=Number(p.totalPaid||0);let choices='';if(paid===0){choices=`<div class="pay-choices"><button class="pay-choice" onclick="confirmPayment('${esc(id)}',65)"><strong>RM65</strong><span>Ansuran pertama — terus lock seat</span></button><button class="pay-choice" onclick="confirmPayment('${esc(id)}',130)"><strong>RM130</strong><span>Bayar penuh terus</span></button></div>`}else if(paid===65){choices=`<button class="pay-choice" style="width:100%" onclick="confirmPayment('${esc(id)}',65)"><strong>RM65</strong><span>Bayaran baki — lengkap RM130</span></button>`}else{choices='<div class="success">Bayaran murid ini telah selesai.</div>'}$('paymentBody').innerHTML=`<div style="margin-bottom:18px"><b style="font-size:19px">${esc(r.name)}</b><div style="color:var(--muted);margin-top:3px">${esc(r.kelas)} • Telah bayar ${money(paid)} • Baki ${money(p.balance??130)}</div></div><div id="payModalMsg"></div>${choices}<p class="help" style="margin-top:16px">Pastikan wang telah diterima sebelum menekan pilihan bayaran. Rekod ini akan dikongsi kepada semua guru melalui dashboard.</p>`;$('paymentModal').classList.remove('hidden')}
-async function confirmPayment(id,amount){if(!confirm(`Sahkan bayaran RM${amount} telah diterima?`))return;msg('payModalMsg','','');const buttons=$('paymentBody').querySelectorAll('button');buttons.forEach(b=>b.disabled=true);try{const d=await apiPost({action:'recordPayment',pin:teacherPIN,studentId:id,amount,teacherName:currentTeacher});if(!d.ok)throw new Error(d.message);msg('payModalMsg','success',d.message+(d.bus?` ${d.bus}, Seat ${d.seatNo}.`:''));await loadTeacherData();setTimeout(()=>closeModal('paymentModal'),700);}catch(e){msg('payModalMsg','error',e.message);buttons.forEach(b=>b.disabled=false)}}
+let paymentSubmitting=false;
+
+function paymentCloseButton(){
+  return $('paymentModal').querySelector('.close');
+}
+
+function showPaymentProcessing(student,amount){
+  const paidBefore=Number((student.payment||{}).totalPaid||0);
+  const totalAfter=Math.min(130,paidBefore+Number(amount||0));
+  $('paymentBody').innerHTML=`
+    <div class="payment-state" role="status" aria-live="polite">
+      <div class="payment-state-icon loading"><div class="payment-spinner"></div></div>
+      <h3>Sedang Mengesahkan Bayaran…</h3>
+      <p class="state-lead">Sila tunggu sebentar. Sistem sedang menyimpan rekod bayaran ke Google Sheet sekolah.</p>
+      <div class="payment-summary">
+        <div class="payment-summary-row"><span>Nama Murid</span><b>${esc(student.name)}</b></div>
+        <div class="payment-summary-row"><span>Kelas</span><b>${esc(student.kelas)}</b></div>
+        <div class="payment-summary-row"><span>Bayaran Diterima</span><b>${money(amount)}</b></div>
+        <div class="payment-summary-row"><span>Jumlah Selepas Bayaran</span><b>${money(totalAfter)} / RM130</b></div>
+      </div>
+      <div class="payment-wait"><b>⏳ Sedang diproses:</b> Jangan tekan bayaran kali kedua atau tutup popup ini. Sistem masih bekerja di belakang tabir.</div>
+    </div>`;
+}
+
+function showPaymentSuccess(student,amount,data){
+  const paidBefore=Number((student.payment||{}).totalPaid||0);
+  const totalAfter=Math.min(130,paidBefore+Number(amount||0));
+  const seatInfo=data && data.bus
+    ? `<div class="payment-summary-row"><span>Tempat Dikunci</span><b>${esc(data.bus)} • Seat ${esc(data.seatNo)}</b></div>`
+    : '';
+  const seatNote=data && data.bus
+    ? `<div class="payment-success-note"><b>🚌 Seat berjaya dikunci.</b> Murid telah diperuntukkan ${esc(data.bus)}, Seat ${esc(data.seatNo)}.</div>`
+    : `<div class="payment-success-note"><b>✅ Rekod berjaya dikemas kini.</b> Bayaran telah disimpan ke sistem sekolah.</div>`;
+
+  $('paymentBody').innerHTML=`
+    <div class="payment-state">
+      <div class="payment-state-icon successful">✓</div>
+      <h3 class="ok">Bayaran Berjaya Disahkan</h3>
+      <p class="state-lead">Rekod pembayaran telah berjaya diterima dan disimpan dalam sistem.</p>
+      <div class="payment-summary">
+        <div class="payment-summary-row"><span>Nama Murid</span><b>${esc(student.name)}</b></div>
+        <div class="payment-summary-row"><span>Bayaran Direkod</span><b>${money(amount)}</b></div>
+        <div class="payment-summary-row"><span>Jumlah Bayaran</span><b>${money(totalAfter)} / RM130</b></div>
+        ${seatInfo}
+      </div>
+      ${seatNote}
+      <div class="payment-state-actions">
+        <button class="btn btn-primary" type="button" onclick="closeModal('paymentModal')">Selesai</button>
+      </div>
+    </div>`;
+}
+
+function showPaymentError(student,amount,errorMessage){
+  $('paymentBody').innerHTML=`
+    <div class="payment-state">
+      <div class="payment-state-icon failed">!</div>
+      <h3 class="bad">Bayaran Belum Dapat Disahkan</h3>
+      <p class="state-lead">${esc(errorMessage||'Sambungan ke sistem sekolah tidak berjaya.')}</p>
+      <div class="payment-error-note"><b>⚠️ Jangan terus rekod kali kedua.</b> Tutup popup ini dan tekan Refresh dahulu untuk semak sama ada rekod sebenarnya telah masuk ke Google Sheet.</div>
+      <div class="payment-state-actions">
+        <button class="btn btn-soft" type="button" onclick="closeModal('paymentModal');loadTeacherData()">Tutup & Refresh</button>
+      </div>
+    </div>`;
+}
+
+async function confirmPayment(id,amount){
+  if(paymentSubmitting)return;
+  if(!confirm(`Sahkan bayaran RM${amount} telah diterima?`))return;
+
+  const student=findStudent(id);
+  if(!student)return;
+
+  paymentSubmitting=true;
+  const closeBtn=paymentCloseButton();
+  if(closeBtn)closeBtn.disabled=true;
+
+  // Tunjuk spinner serta-merta sebelum request network bermula.
+  showPaymentProcessing(student,amount);
+  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+
+  try{
+    const d=await apiPost({
+      action:'recordPayment',
+      pin:teacherPIN,
+      studentId:id,
+      amount,
+      teacherName:currentTeacher
+    });
+    if(!d.ok)throw new Error(d.message||'Rekod pembayaran gagal.');
+
+    // Paparkan kejayaan dahulu, kemudian refresh dashboard di belakang.
+    showPaymentSuccess(student,amount,d);
+    if(closeBtn)closeBtn.disabled=false;
+    loadTeacherData(true);
+  }catch(e){
+    showPaymentError(student,amount,e.message);
+    if(closeBtn)closeBtn.disabled=false;
+  }finally{
+    paymentSubmitting=false;
+  }
+}
 async function deleteStudentRecord(id){
   const r=findStudent(id);if(!r)return;
   const p=r.payment||{};const paid=Number(p.totalPaid||0);
