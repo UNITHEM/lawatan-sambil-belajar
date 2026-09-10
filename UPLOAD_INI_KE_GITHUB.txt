@@ -1,0 +1,9 @@
+UPLOAD SEMUA ITEM INI KE ROOT REPOSITORY GITHUB:
+
+1. index.html
+2. .nojekyll
+3. README.md
+4. folder assets
+
+Jangan upload ZIP sebagai satu fail.
+Extract ZIP dahulu, kemudian drag semua item di atas ke GitHub > Add file > Upload files.
