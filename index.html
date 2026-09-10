@@ -62,6 +62,8 @@
     .payment-wait{background:#f4f8fc;border:1px solid var(--line);border-radius:14px;padding:12px 14px;color:#49647d;font-size:13px;line-height:1.5;text-align:left}
     .payment-success-note{background:var(--green-bg);border:1px solid #bfe6cf;border-radius:14px;padding:12px 14px;color:#155f3b;font-size:13px;line-height:1.5;text-align:left}
     .payment-error-note{background:var(--red-bg);border:1px solid #f3c6c2;border-radius:14px;padding:12px 14px;color:#8f2d24;font-size:13px;line-height:1.5;text-align:left}
+    .payment-check-note{background:#eef7ff;border:1px solid #cfe2f3;border-radius:14px;padding:12px 14px;color:#315b7d;font-size:13px;line-height:1.5;text-align:left;margin-top:10px}
+
     .payment-state-actions{display:flex;gap:9px;margin-top:17px}
     .payment-state-actions .btn{flex:1}
     #paymentModal .close:disabled{opacity:.35;cursor:not-allowed}
@@ -201,7 +203,6 @@
     </div>
   </div>
   <!-- Instant registration feedback -->
-  </div>
 
   <div id="registrationSuccessModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="registrationSuccessTitle">
     <div class="success-modal">
@@ -227,7 +228,6 @@
       </div>
     </div>
   </div>
-  </div>
 
   <div id="detailModal" class="modal-backdrop hidden"><div class="modal"><div class="modal-head"><h3>Maklumat Murid</h3><button class="close" onclick="closeModal('detailModal')">×</button></div><div class="modal-body" id="detailBody"></div></div></div>
   <div id="paymentModal" class="modal-backdrop hidden"><div class="modal"><div class="modal-head"><h3>Rekod Pembayaran</h3><button class="close" onclick="closeModal('paymentModal')">×</button></div><div class="modal-body" id="paymentBody"></div></div></div>
@@ -240,8 +240,54 @@ const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const money=n=>'RM'+Number(n||0).toLocaleString('ms-MY',{minimumFractionDigits:0,maximumFractionDigits:2});
 function msg(id,type,text){$(id).innerHTML=text?`<div class="${type}">${esc(text)}</div>`:''}
 function setBtn(btn,loading,label){btn.disabled=loading;btn.innerHTML=loading?'<span class="spinner"></span> Memproses...':label}
-async function apiGet(params){const u=new URL(API_URL);Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));const r=await fetch(u.toString(),{method:'GET',cache:'no-store'});if(!r.ok)throw new Error('Server tidak dapat dihubungi.');return r.json()}
-async function apiPost(payload){const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),redirect:'follow'});if(!r.ok)throw new Error('Server tidak dapat dihubungi.');return r.json()}
+async function fetchJson(url,options={},timeoutMs=30000){
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),timeoutMs);
+  try{
+    const r=await fetch(url,{...options,signal:controller.signal});
+    if(!r.ok){
+      const err=new Error(`Sambungan server terganggu (HTTP ${r.status}).`);
+      err.code='HTTP_ERROR';
+      err.httpStatus=r.status;
+      throw err;
+    }
+    const text=await r.text();
+    try{
+      return JSON.parse(text);
+    }catch(_){
+      const err=new Error('Server memberi respons yang tidak lengkap.');
+      err.code='INVALID_RESPONSE';
+      throw err;
+    }
+  }catch(e){
+    if(e && e.name==='AbortError'){
+      const err=new Error('Sambungan mengambil masa terlalu lama.');
+      err.code='TIMEOUT';
+      throw err;
+    }
+    if(e && !e.code){
+      const err=new Error('Sambungan ke sistem Google terganggu.');
+      err.code='NETWORK_ERROR';
+      throw err;
+    }
+    throw e;
+  }finally{
+    clearTimeout(timer);
+  }
+}
+async function apiGet(params){
+  const u=new URL(API_URL);
+  Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));
+  return fetchJson(u.toString(),{method:'GET',cache:'no-store'},30000);
+}
+async function apiPost(payload){
+  return fetchJson(API_URL,{
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify(payload),
+    redirect:'follow'
+  },35000);
+}
 async function init(){await Promise.allSettled([loadClasses(),loadPublicStats()]);}
 async function loadClasses(){try{const d=await apiGet({action:'classes'});if(!d.ok)throw new Error(d.message);$('kelas').innerHTML='<option value="">Pilih kelas</option>'+d.classes.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');}catch(e){$('kelas').innerHTML='<option value="">Gagal memuatkan kelas</option>';msg('publicMsg','error','Tidak dapat membaca senarai kelas. Semak deployment Apps Script.');}}
 async function loadStudents(){const kelas=$('kelas').value;const sel=$('studentId');sel.disabled=true;sel.innerHTML='<option value="">Memuatkan nama...</option>';if(!kelas){sel.innerHTML='<option value="">Pilih kelas dahulu</option>';return}try{const d=await apiGet({action:'students',kelas});if(!d.ok)throw new Error(d.message);sel.innerHTML='<option value="">Pilih nama anak</option>'+d.students.map(s=>`<option value="${esc(s.studentId)}">${esc(s.name)}</option>`).join('');sel.disabled=false;}catch(e){sel.innerHTML='<option value="">Gagal memuatkan murid</option>';msg('publicMsg','error',e.message)}}
@@ -562,7 +608,7 @@ function showPaymentError(student,amount,errorMessage){
       <div class="payment-state-icon failed">!</div>
       <h3 class="bad">Bayaran Belum Dapat Disahkan</h3>
       <p class="state-lead">${esc(errorMessage||'Sambungan ke sistem sekolah tidak berjaya.')}</p>
-      <div class="payment-error-note"><b>⚠️ Jangan terus rekod kali kedua.</b> Tutup popup ini dan tekan Refresh dahulu untuk semak sama ada rekod sebenarnya telah masuk ke Google Sheet.</div>
+      <div class="payment-error-note"><b>⚠️ Bayaran tidak akan dihantar kali kedua secara automatik.</b> Sistem telah cuba menyemak rekod Google. Jika masih gagal, tekan “Tutup & Refresh” dan semak status murid sebelum mencuba semula.</div>
       <div class="payment-state-actions">
         <button class="btn btn-soft" type="button" onclick="closeModal('paymentModal');loadTeacherData()">Tutup & Refresh</button>
       </div>
@@ -621,6 +667,82 @@ function scheduleTeacherBackgroundSync(){
   },1200);
 }
 
+
+async function postPaymentSafely(payload,maxAttempts=2){
+  let lastError=null;
+
+  for(let attempt=1;attempt<=maxAttempts;attempt++){
+    try{
+      const d=await apiPost(payload);
+
+      // "busy" means no payment mutation was made, so retry is safe.
+      if(d && d.busy && attempt<maxAttempts){
+        await wait(800);
+        continue;
+      }
+      return d;
+    }catch(e){
+      lastError=e;
+      if(attempt<maxAttempts){
+        setTeacherSync('syncing','Sambungan terganggu — menyemak semula…');
+        await wait(750);
+      }
+    }
+  }
+  throw lastError||new Error('Sambungan ke sistem pembayaran gagal.');
+}
+
+function paymentDataFromTeacherRecord(record){
+  const p=(record&&record.payment)||{};
+  return {
+    ok:true,
+    studentId:record&&record.studentId,
+    name:record&&record.name,
+    paid:Number(p.totalPaid||0),
+    balance:Number(p.balance??130),
+    paymentStatus:p.paymentStatus||'BELUM BAYAR',
+    seatStatus:p.seatStatus||'BELUM CONFIRM',
+    bus:p.bus||'',
+    seatNo:p.seatNo||'',
+    reconciled:true
+  };
+}
+
+async function reconcilePaymentAfterConnectionError(studentId,beforePaid,targetPaid){
+  setTeacherSync('syncing','Menyemak sama ada bayaran telah tersimpan…');
+
+  try{
+    const payload=await fetchTeacherDataWithRetry(3);
+    const record=(payload.registrations||[]).find(x=>String(x.studentId)===String(studentId));
+    if(!record)return null;
+
+    const currentPaid=Number((record.payment||{}).totalPaid||0);
+
+    // Jika Google sudah menunjukkan target bayaran, request sebenarnya berjaya.
+    if(currentPaid>=targetPaid && currentPaid>beforePaid){
+      teacherDATA=payload.registrations;
+      teacherSTATS=payload.stats||{};
+      renderStats();
+      buildClassFilter();
+      renderTeacherTable();
+      setTeacherSync('ready','Data terkini');
+      return paymentDataFromTeacherRecord(record);
+    }
+
+    // Simpan data terkini walaupun payment belum masuk.
+    teacherDATA=payload.registrations;
+    teacherSTATS=payload.stats||{};
+    renderStats();
+    buildClassFilter();
+    renderTeacherTable();
+    setTeacherSync('ready','Data terkini');
+    return null;
+  }catch(_){
+    setTeacherSync('error','Tidak dapat mengesahkan status bayaran');
+    return null;
+  }
+}
+
 async function confirmPayment(id,amount){
   if(paymentSubmitting)return;
   if(!confirm(`Sahkan bayaran RM${amount} telah diterima?`))return;
@@ -628,31 +750,63 @@ async function confirmPayment(id,amount){
   const student=findStudent(id);
   if(!student)return;
 
+  const beforePaid=Number((student.payment||{}).totalPaid||0);
+  const targetPaid=Math.min(130,beforePaid+Number(amount||0));
+
   paymentSubmitting=true;
   const closeBtn=paymentCloseButton();
   if(closeBtn)closeBtn.disabled=true;
 
-  // Tunjuk spinner serta-merta sebelum request network bermula.
   showPaymentProcessing(student,amount);
   await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
 
+  const payload={
+    action:'recordPayment',
+    pin:teacherPIN,
+    studentId:id,
+    amount,
+    expectedPaid:beforePaid,
+    teacherName:currentTeacher
+  };
+
   try{
-    const d=await apiPost({
-      action:'recordPayment',
-      pin:teacherPIN,
-      studentId:id,
-      amount,
-      teacherName:currentTeacher
-    });
-    if(!d.ok)throw new Error(d.message||'Rekod pembayaran gagal.');
+    let d;
 
-    // Paparkan kejayaan dan kemas kini row/stat dashboard serta-merta.
+    try{
+      d=await postPaymentSafely(payload,2);
+    }catch(connectionError){
+      // Jangan terus anggap gagal. Semak Google Sheet dahulu kerana
+      // request pertama mungkin sudah berjaya tetapi respons balik terputus.
+      $('paymentBody').insertAdjacentHTML(
+        'beforeend',
+        '<div class="payment-check-note"><b>🔎 Menyemak rekod…</b> Sambungan respons terganggu. Sistem sedang memastikan sama ada bayaran telah pun tersimpan.</div>'
+      );
+
+      const reconciled=await reconcilePaymentAfterConnectionError(id,beforePaid,targetPaid);
+      if(reconciled){
+        d=reconciled;
+      }else{
+        throw connectionError;
+      }
+    }
+
+    if(!d || !d.ok){
+      if(d && d.stale){
+        // Dashboard cikgu mungkin lama. Ambil data terkini tanpa cuba tambah bayaran.
+        await loadTeacherData(false);
+      }
+      throw new Error((d&&d.message)||'Rekod pembayaran gagal.');
+    }
+
     showPaymentSuccess(student,amount,d);
-    applyPaymentLocally(id,amount,d);
-    if(closeBtn)closeBtn.disabled=false;
 
-    // Full sync hanya dibuat kemudian secara senyap; table tidak dikosongkan.
-    scheduleTeacherBackgroundSync();
+    // Kalau reconciliation tadi sudah replace teacherDATA, jangan tambah sekali lagi.
+    if(!d.reconciled){
+      applyPaymentLocally(id,amount,d);
+      scheduleTeacherBackgroundSync();
+    }
+
+    if(closeBtn)closeBtn.disabled=false;
   }catch(e){
     showPaymentError(student,amount,e.message);
     if(closeBtn)closeBtn.disabled=false;
