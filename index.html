@@ -36,7 +36,15 @@
     .footer{padding:28px 22px;text-align:center;color:var(--muted);font-size:12px;border-top:1px solid var(--line);background:#fff}
     /* Teacher */
     .teacher-shell{min-height:100vh}.teacher-hero{background:linear-gradient(135deg,#0a356a,#154f88);color:#fff;padding:30px 0}.teacher-hero .wrap{padding-top:0;padding-bottom:0}.teacher-hero h1{font-size:32px;margin:7px 0}.teacher-hero p{color:#d9eaff;margin:0}.login-card{max-width:470px;margin:60px auto;background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:28px}.login-card h2{margin:0 0 5px}.login-card p{margin:0 0 20px;color:var(--muted)}
-    .teacher-stats{grid-template-columns:repeat(5,1fr);margin-top:22px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.search{flex:1;min-width:230px;border:1px solid #cdddea;border-radius:12px;padding:11px 13px}.filter{border:1px solid #cdddea;border-radius:12px;padding:11px 13px;background:#fff}.table-card{background:#fff;border:1px solid var(--line);border-radius:19px;box-shadow:var(--shadow);overflow:hidden}.table-scroll{overflow:auto}.data-table{width:100%;border-collapse:collapse;min-width:970px}.data-table th{background:#f1f6fb;color:#49647d;text-align:left;font-size:12px;padding:12px 14px;white-space:nowrap}.data-table td{border-top:1px solid #edf2f7;padding:13px 14px;font-size:13px;vertical-align:middle}.data-table tr:hover td{background:#fbfdff}.student-name{font-weight:800;color:#173b60}.badge{display:inline-flex;align-items:center;padding:6px 9px;border-radius:99px;font-size:11px;font-weight:850;white-space:nowrap}.b-green{background:var(--green-bg);color:#117340}.b-amber{background:var(--amber-bg);color:#8a5b00}.b-gray{background:#eef2f5;color:#587084}.b-blue{background:#e9f3ff;color:#145f9b}.mini-btn{border:1px solid #ccdeed;background:#fff;color:var(--navy);border-radius:9px;padding:7px 9px;font-weight:800;cursor:pointer}.mini-btn.pay{background:var(--navy);color:#fff;border-color:var(--navy)}.mini-btn.delete{background:#fff0ef;color:var(--red);border-color:#f2b8b3}.mini-btn.delete:hover{background:#fde3e0}
+    .teacher-stats{grid-template-columns:repeat(5,1fr);margin-top:22px}
+    .teacher-sync{display:flex;align-items:center;gap:7px;color:#d9eaff;font-size:12px;font-weight:750;margin-top:8px;min-height:18px}
+    .teacher-sync-dot{width:8px;height:8px;border-radius:50%;background:#8bd3a8;box-shadow:0 0 0 3px rgba(139,211,168,.15)}
+    .teacher-sync.syncing .teacher-sync-dot{background:#ffd36b;animation:pulseDot 1s ease-in-out infinite}
+    .teacher-sync.error-sync .teacher-sync-dot{background:#ff9b91}
+    @keyframes pulseDot{0%,100%{opacity:.45;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
+    .inline-loader{display:inline-flex;align-items:center;gap:9px;color:var(--muted);font-weight:750}
+    .inline-loader:before{content:"";width:17px;height:17px;border:2px solid #d5e4f2;border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.search{flex:1;min-width:230px;border:1px solid #cdddea;border-radius:12px;padding:11px 13px}.filter{border:1px solid #cdddea;border-radius:12px;padding:11px 13px;background:#fff}.table-card{background:#fff;border:1px solid var(--line);border-radius:19px;box-shadow:var(--shadow);overflow:hidden}.table-scroll{overflow:auto}.data-table{width:100%;border-collapse:collapse;min-width:970px}.data-table th{background:#f1f6fb;color:#49647d;text-align:left;font-size:12px;padding:12px 14px;white-space:nowrap}.data-table td{border-top:1px solid #edf2f7;padding:13px 14px;font-size:13px;vertical-align:middle}.data-table tr:hover td{background:#fbfdff}.student-name{font-weight:800;color:#173b60}.badge{display:inline-flex;align-items:center;padding:6px 9px;border-radius:99px;font-size:11px;font-weight:850;white-space:nowrap}.b-green{background:var(--green-bg);color:#117340}.b-amber{background:var(--amber-bg);color:#8a5b00}.b-gray{background:#eef2f5;color:#587084}.b-blue{background:#e9f3ff;color:#145f9b}.mini-btn{border:1px solid #ccdeed;background:#fff;color:var(--navy);border-radius:9px;padding:7px 9px;font-weight:800;cursor:pointer}.mini-btn.pay{background:var(--navy);color:#fff;border-color:var(--navy)}.mini-btn.delete{background:#fff0ef;color:var(--red);border-color:#f2b8b3}.mini-btn.delete:hover{background:#fde3e0}
     .payment-state{text-align:center;padding:8px 2px 2px}
     .payment-state-icon{width:72px;height:72px;margin:2px auto 17px;border-radius:50%;display:grid;place-items:center;font-size:38px;font-weight:900}
     .payment-state-icon.loading{background:#eaf4ff;border:1px solid #cfe2f3}
@@ -183,7 +191,7 @@
     </div>
 
     <div id="teacherDashboard" class="hidden">
-      <section class="teacher-hero"><div class="wrap"><div style="display:flex;align-items:center;justify-content:space-between;gap:15px"><div><div class="eyebrow">🔐 PORTAL GURU</div><h1>Dashboard Pengurusan Lawatan</h1><p id="teacherWelcome"></p></div><div style="display:flex;gap:8px"><button class="btn btn-soft" onclick="loadTeacherData()">↻ Refresh</button><button class="btn btn-danger" onclick="teacherLogout()">Keluar</button></div></div></div></section>
+      <section class="teacher-hero"><div class="wrap"><div style="display:flex;align-items:center;justify-content:space-between;gap:15px"><div><div class="eyebrow">🔐 PORTAL GURU</div><h1>Dashboard Pengurusan Lawatan</h1><p id="teacherWelcome"></p><div id="teacherSync" class="teacher-sync"><span class="teacher-sync-dot"></span><span id="teacherSyncText">Data sedia</span></div></div><div style="display:flex;gap:8px"><button class="btn btn-soft" id="teacherRefreshBtn" onclick="loadTeacherData(false)">↻ Refresh</button><button class="btn btn-danger" onclick="teacherLogout()">Keluar</button></div></div></div></section>
       <main class="wrap">
         <section class="stats teacher-stats"><div class="stat"><small>Berdaftar</small><strong id="tRegistered">0</strong></div><div class="stat"><small>Seat Confirmed</small><strong id="tConfirmed">0</strong></div><div class="stat"><small>Tempat Kosong</small><strong id="tAvailable">74</strong></div><div class="stat"><small>Bayar Penuh</small><strong id="tFullPaid">0</strong></div><div class="stat"><small>Jumlah Kutipan</small><strong id="tCollected" style="font-size:23px">RM0</strong></div></section>
         <div class="toolbar"><input id="searchStudent" class="search" placeholder="Cari nama murid / kelas / penjaga..." oninput="renderTeacherTable()"><select id="paymentFilter" class="filter" onchange="renderTeacherTable()"><option value="ALL">Semua Status</option><option value="UNPAID">Belum Bayar</option><option value="INSTALLMENT">Ansuran RM65</option><option value="FULL">Bayar Penuh</option><option value="CONFIRMED">Seat Confirmed</option></select><select id="classFilter" class="filter" onchange="renderTeacherTable()"><option value="ALL">Semua Kelas</option></select><button class="btn btn-soft" onclick="cleanupOrphans()">🧹 Bersihkan Data Tertinggal</button></div>
@@ -364,9 +372,131 @@ $('registrationForm').addEventListener('submit',async e=>{
 function scrollToForm(){$('registrationFormSection').scrollIntoView({behavior:'smooth',block:'start'})}
 function showTeacherLogin(){$('publicView').classList.add('hidden');$('teacherView').classList.remove('hidden');$('teacherLoginPanel').classList.remove('hidden');$('teacherDashboard').classList.add('hidden');window.scrollTo(0,0)}
 function showPublic(){$('teacherView').classList.add('hidden');$('publicView').classList.remove('hidden');window.scrollTo(0,0);loadPublicStats()}
-async function teacherLogin(){const pin=$('teacherPin').value.trim();const name=$('teacherName').value.trim();if(!name){msg('loginMsg','error','Masukkan nama guru.');return}if(!pin){msg('loginMsg','error','Masukkan PIN guru.');return}const btn=$('loginBtn');setBtn(btn,true,'Masuk Portal Guru');try{const d=await apiPost({action:'verifyTeacher',pin});if(!d.ok)throw new Error('PIN guru tidak sah.');teacherPIN=pin;currentTeacher=name;sessionStorage.setItem('teacherName',name);$('teacherWelcome').textContent=`Log masuk sebagai ${name}`;$('teacherLoginPanel').classList.add('hidden');$('teacherDashboard').classList.remove('hidden');await loadTeacherData();}catch(e){msg('loginMsg','error',e.message)}finally{setBtn(btn,false,'Masuk Portal Guru')}}
-function teacherLogout(){teacherPIN='';teacherDATA=[];currentTeacher='';$('teacherPin').value='';$('teacherDashboard').classList.add('hidden');$('teacherLoginPanel').classList.remove('hidden');msg('loginMsg','','')}
-async function loadTeacherData(silent=false){if(!silent){msg('teacherMsg','','');$('teacherRows').innerHTML='<tr><td colspan="8">Memuatkan data...</td></tr>';}try{const d=await apiPost({action:'teacherData',pin:teacherPIN});if(!d.ok)throw new Error(d.message);teacherDATA=d.data.registrations||[];teacherSTATS=d.data.stats||{};renderStats();buildClassFilter();renderTeacherTable();}catch(e){if(!silent){msg('teacherMsg','error',e.message);$('teacherRows').innerHTML='<tr><td colspan="8">Gagal memuatkan data.</td></tr>';}}}
+async function teacherLogin(){
+  const pin=$('teacherPin').value.trim();
+  const name=$('teacherName').value.trim();
+  if(!name){msg('loginMsg','error','Masukkan nama guru.');return}
+  if(!pin){msg('loginMsg','error','Masukkan PIN guru.');return}
+  const btn=$('loginBtn');
+  setBtn(btn,true,'Masuk Portal Guru');
+  try{
+    const d=await apiPost({action:'verifyTeacher',pin});
+    if(!d.ok)throw new Error('PIN guru tidak sah.');
+    teacherPIN=pin;
+    currentTeacher=name;
+    sessionStorage.setItem('teacherName',name);
+    $('teacherWelcome').textContent=`Log masuk sebagai ${name}`;
+    $('teacherLoginPanel').classList.add('hidden');
+    $('teacherDashboard').classList.remove('hidden');
+    await loadTeacherData(false);
+  }catch(e){
+    msg('loginMsg','error',e.message);
+  }finally{
+    setBtn(btn,false,'Masuk Portal Guru');
+  }
+}
+
+function teacherLogout(){
+  teacherPIN='';
+  teacherDATA=[];
+  teacherSTATS={};
+  currentTeacher='';
+  $('teacherPin').value='';
+  $('teacherDashboard').classList.add('hidden');
+  $('teacherLoginPanel').classList.remove('hidden');
+  msg('loginMsg','','');
+}
+
+let teacherLoadInFlight=null;
+
+function setTeacherSync(state,text){
+  const box=$('teacherSync');
+  const txt=$('teacherSyncText');
+  if(!box||!txt)return;
+  box.classList.remove('syncing','error-sync');
+  if(state==='syncing')box.classList.add('syncing');
+  if(state==='error')box.classList.add('error-sync');
+  txt.textContent=text||'Data sedia';
+}
+
+const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+
+async function fetchTeacherDataWithRetry(maxAttempts=3){
+  let lastError=null;
+  for(let attempt=1;attempt<=maxAttempts;attempt++){
+    try{
+      const d=await apiPost({action:'teacherData',pin:teacherPIN});
+      if(!d || d.ok!==true){
+        throw new Error((d&&d.message)||'Server tidak memulangkan data guru.');
+      }
+
+      // Terima format semasa {ok:true,data:{...}} dan fallback format lama.
+      const payload=(d.data && typeof d.data==='object') ? d.data : d;
+      if(!payload || !Array.isArray(payload.registrations) || !payload.stats){
+        throw new Error('Data guru diterima tidak lengkap.');
+      }
+      return payload;
+    }catch(err){
+      lastError=err;
+      if(attempt<maxAttempts){
+        setTeacherSync('syncing',`Sambungan perlahan — cuba semula ${attempt}/${maxAttempts-1}…`);
+        await wait(450*attempt);
+      }
+    }
+  }
+  throw lastError||new Error('Gagal mendapatkan data guru.');
+}
+
+async function loadTeacherData(silent=false){
+  // Elak beberapa refresh berat berjalan serentak.
+  if(teacherLoadInFlight){
+    if(!silent)setTeacherSync('syncing','Sedang menyegerakkan data…');
+    return teacherLoadInFlight;
+  }
+
+  const hasExisting=teacherDATA.length>0;
+  if(!silent){
+    msg('teacherMsg','','');
+    setTeacherSync('syncing','Sedang menyegerakkan data…');
+    const btn=$('teacherRefreshBtn');
+    if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Refresh';}
+    // Jangan kosongkan table semasa refresh kalau data lama masih ada.
+    if(!hasExisting){
+      $('teacherRows').innerHTML='<tr><td colspan="8"><span class="inline-loader">Memuatkan senarai murid…</span></td></tr>';
+    }
+  }
+
+  teacherLoadInFlight=(async()=>{
+    try{
+      const payload=await fetchTeacherDataWithRetry(3);
+      teacherDATA=payload.registrations;
+      teacherSTATS=payload.stats||{};
+      renderStats();
+      buildClassFilter();
+      renderTeacherTable();
+      setTeacherSync('ready','Data terkini');
+      return true;
+    }catch(e){
+      setTeacherSync('error','Sync gagal — tekan Refresh');
+      if(!silent){
+        msg('teacherMsg','error','Sambungan Google sedang perlahan. Data tidak dapat dikemas kini. Tekan Refresh untuk cuba semula.');
+        if(!hasExisting){
+          $('teacherRows').innerHTML='<tr><td colspan="8">Data belum dapat dimuatkan. Tekan Refresh untuk cuba semula.</td></tr>';
+        }
+      }
+      return false;
+    }finally{
+      if(!silent){
+        const btn=$('teacherRefreshBtn');
+        if(btn){btn.disabled=false;btn.innerHTML='↻ Refresh';}
+      }
+      teacherLoadInFlight=null;
+    }
+  })();
+
+  return teacherLoadInFlight;
+}
+
 function renderStats(){$('tRegistered').textContent=teacherDATA.length;$('tConfirmed').textContent=teacherSTATS.confirmed||0;$('tAvailable').textContent=teacherSTATS.available??74;$('tFullPaid').textContent=teacherSTATS.fullPaid||0;$('tCollected').textContent=money(teacherSTATS.totalCollected||0)}
 function buildClassFilter(){const current=$('classFilter').value;const cls=[...new Set(teacherDATA.map(x=>x.kelas).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'ms'));$('classFilter').innerHTML='<option value="ALL">Semua Kelas</option>'+cls.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');if(cls.includes(current))$('classFilter').value=current}
 function renderTeacherTable(){const q=$('searchStudent').value.trim().toLowerCase();const pf=$('paymentFilter').value;const cf=$('classFilter').value;const rows=teacherDATA.filter(r=>{const p=r.payment||{};const hay=`${r.name} ${r.kelas} ${r.parentName}`.toLowerCase();if(q&&!hay.includes(q))return false;if(cf!=='ALL'&&String(r.kelas)!==cf)return false;if(pf==='UNPAID'&&Number(p.totalPaid)!==0)return false;if(pf==='INSTALLMENT'&&Number(p.totalPaid)!==65)return false;if(pf==='FULL'&&Number(p.totalPaid)<130)return false;if(pf==='CONFIRMED'&&String(p.seatStatus)!=='CONFIRMED')return false;return true});
@@ -439,6 +569,58 @@ function showPaymentError(student,amount,errorMessage){
     </div>`;
 }
 
+
+function applyPaymentLocally(studentId,amount,data){
+  const r=findStudent(studentId);
+  if(!r)return;
+  const p=r.payment||(r.payment={});
+  const oldPaid=Number(p.totalPaid||0);
+  const oldConfirmed=String(p.seatStatus||'').toUpperCase()==='CONFIRMED';
+  const oldFull=oldPaid>=130;
+
+  const newPaid=Number(data&&data.paid!=null?data.paid:Math.min(130,oldPaid+Number(amount||0)));
+  p.totalPaid=newPaid;
+  p.balance=Number(data&&data.balance!=null?data.balance:Math.max(0,130-newPaid));
+  p.paymentStatus=(data&&data.paymentStatus)||(newPaid>=130?'BAYAR PENUH':newPaid>=65?'ANSURAN - BAKI RM65':'BELUM BAYAR');
+  p.seatStatus=(data&&data.seatStatus)||p.seatStatus||'BELUM CONFIRM';
+  if(data&&data.bus)p.bus=data.bus;
+  if(data&&data.seatNo)p.seatNo=data.seatNo;
+  p.verifiedBy=currentTeacher;
+
+  const newConfirmed=String(p.seatStatus||'').toUpperCase()==='CONFIRMED';
+  const newFull=newPaid>=130;
+
+  teacherSTATS=teacherSTATS||{};
+  if(!oldConfirmed && newConfirmed){
+    teacherSTATS.confirmed=Number(teacherSTATS.confirmed||0)+1;
+  }
+  teacherSTATS.available=Math.max(0,74-Number(teacherSTATS.confirmed||0));
+
+  if(!oldFull && newFull){
+    teacherSTATS.fullPaid=Number(teacherSTATS.fullPaid||0)+1;
+    if(oldPaid===65){
+      teacherSTATS.installments=Math.max(0,Number(teacherSTATS.installments||0)-1);
+    }
+  }else if(oldPaid===0 && newPaid===65){
+    teacherSTATS.installments=Number(teacherSTATS.installments||0)+1;
+  }
+
+  teacherSTATS.totalCollected=Number(teacherSTATS.totalCollected||0)+Number(amount||0);
+
+  // Update dashboard terus daripada data yang sudah disahkan oleh API.
+  renderStats();
+  renderTeacherTable();
+  setTeacherSync('syncing','Bayaran disimpan — sync latar belakang…');
+}
+
+function scheduleTeacherBackgroundSync(){
+  setTimeout(()=>{
+    loadTeacherData(true).then(ok=>{
+      if(ok)setTeacherSync('ready','Data terkini');
+    });
+  },1200);
+}
+
 async function confirmPayment(id,amount){
   if(paymentSubmitting)return;
   if(!confirm(`Sahkan bayaran RM${amount} telah diterima?`))return;
@@ -464,10 +646,13 @@ async function confirmPayment(id,amount){
     });
     if(!d.ok)throw new Error(d.message||'Rekod pembayaran gagal.');
 
-    // Paparkan kejayaan dahulu, kemudian refresh dashboard di belakang.
+    // Paparkan kejayaan dan kemas kini row/stat dashboard serta-merta.
     showPaymentSuccess(student,amount,d);
+    applyPaymentLocally(id,amount,d);
     if(closeBtn)closeBtn.disabled=false;
-    loadTeacherData(true);
+
+    // Full sync hanya dibuat kemudian secara senyap; table tidak dikosongkan.
+    scheduleTeacherBackgroundSync();
   }catch(e){
     showPaymentError(student,amount,e.message);
     if(closeBtn)closeBtn.disabled=false;
