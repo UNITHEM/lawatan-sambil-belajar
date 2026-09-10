@@ -55,6 +55,13 @@
     .success-student strong{display:block;color:var(--navy);font-size:16px;line-height:1.4}
     .success-reminder{background:var(--amber-bg);border:1px solid #f2d58a;border-radius:14px;padding:13px 14px;color:#6f4b00;text-align:left;font-size:13px;line-height:1.5;margin-bottom:18px}
     .success-actions .btn{width:100%;padding:13px 18px;font-size:15px}
+    .success-check.processing{background:#eaf4ff;color:var(--navy);border-color:#cfe2f3}
+    .success-check.processing::before{content:"";width:36px;height:36px;border:4px solid #cfe2f3;border-top-color:var(--navy);border-radius:50%;animation:spin .75s linear infinite}
+    .success-check.error-state{background:var(--red-bg);color:var(--red);border-color:#f3c6c2}
+    .success-modal h2.processing-title{color:var(--navy)}
+    .success-modal h2.error-title{color:var(--red)}
+    .processing-reminder{background:#f4f8fc;border:1px solid var(--line);border-radius:14px;padding:13px 14px;color:#49647d;text-align:left;font-size:13px;line-height:1.5;margin-bottom:18px}
+
     @media(max-width:620px){
       .submit-overlay{padding:16px}
       .submit-progress{padding:25px 20px;border-radius:22px}
@@ -159,34 +166,33 @@
       </main>
     </div>
   </div>
-
-
-  <!-- Smooth registration feedback -->
-  <div id="submitOverlay" class="submit-overlay hidden" role="status" aria-live="polite" aria-busy="true">
-    <div class="submit-progress">
-      <div class="submit-spinner" aria-hidden="true"></div>
-      <h3 id="submitProgressTitle">Sedang menghantar pendaftaran…</h3>
-      <p id="submitProgressText">Sila tunggu sebentar. Maklumat sedang dihantar dengan selamat ke rekod sekolah.</p>
-      <div class="wait-note">Jangan tutup halaman atau tekan butang Hantar sekali lagi.</div>
-    </div>
+  <!-- Instant registration feedback -->
   </div>
 
   <div id="registrationSuccessModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="registrationSuccessTitle">
     <div class="success-modal">
       <div class="success-modal-body">
-        <div class="success-check">✓</div>
+        <div id="registrationStateIcon" class="success-check">✓</div>
         <h2 id="registrationSuccessTitle">Pendaftaran Berjaya Dihantar</h2>
-        <p class="lead">Maklumat murid telah berjaya direkodkan dalam sistem lawatan sekolah.</p>
-        <div class="success-student">
+        <p id="registrationStateLead" class="lead">Maklumat murid telah berjaya direkodkan dalam sistem lawatan sekolah.</p>
+
+        <div id="registrationStudentBox" class="success-student">
           <small>Murid yang didaftarkan</small>
           <strong id="successStudentName">—</strong>
           <small style="margin-top:8px">Kelas</small>
           <strong id="successStudentClass">—</strong>
         </div>
-        <div class="success-reminder"><b>📌 Penting:</b> Pendaftaran ini belum mengesahkan tempat. Seat hanya dikunci selepas bayaran pertama <b>RM65</b> diterima dan disahkan oleh guru.</div>
-        <div class="success-actions"><button class="btn btn-primary" type="button" onclick="closeRegistrationSuccess()">Baik, Saya Faham</button></div>
+
+        <div id="registrationStateReminder" class="success-reminder">
+          <b>📌 Penting:</b> Pendaftaran ini belum mengesahkan tempat. Seat hanya dikunci selepas bayaran pertama <b>RM65</b> diterima dan disahkan oleh guru.
+        </div>
+
+        <div class="success-actions">
+          <button id="registrationStateBtn" class="btn btn-primary" type="button" onclick="closeRegistrationSuccess()">Baik, Saya Faham</button>
+        </div>
       </div>
     </div>
+  </div>
   </div>
 
   <div id="detailModal" class="modal-backdrop hidden"><div class="modal"><div class="modal-head"><h3>Maklumat Murid</h3><button class="close" onclick="closeModal('detailModal')">×</button></div><div class="modal-body" id="detailBody"></div></div></div>
@@ -208,27 +214,74 @@ async function loadStudents(){const kelas=$('kelas').value;const sel=$('studentI
 $('kelas').addEventListener('change',loadStudents);
 async function loadPublicStats(){try{const d=await apiGet({action:'publicStats'});if(d.ok){$('statConfirmed').textContent=d.stats.confirmed;$('statAvailable').textContent=d.stats.available;$('statFullPaid').textContent=d.stats.fullPaid;}}catch(e){console.warn(e)}}
 let registrationSubmitting=false;
-function showSubmitOverlay(){
-  $('submitProgressTitle').textContent='Sedang menghantar pendaftaran…';
-  $('submitProgressText').textContent='Sila tunggu sebentar. Maklumat sedang dihantar dengan selamat ke rekod sekolah.';
-  $('submitOverlay').classList.remove('hidden');
-  document.body.style.overflow='hidden';
-}
-function hideSubmitOverlay(){
-  $('submitOverlay').classList.add('hidden');
-  document.body.style.overflow='';
-}
-function showRegistrationSuccess(name,kelas){
+let lastRegistrationPayload=null;
+
+function setRegistrationModalState(state,name,kelas,message){
+  const icon=$('registrationStateIcon');
+  const title=$('registrationSuccessTitle');
+  const lead=$('registrationStateLead');
+  const box=$('registrationStudentBox');
+  const reminder=$('registrationStateReminder');
+  const btn=$('registrationStateBtn');
+
+  icon.className='success-check';
+  title.className='';
+  btn.className='btn btn-primary';
+
   $('successStudentName').textContent=name||'—';
   $('successStudentClass').textContent=kelas||'—';
+
+  if(state==='processing'){
+    icon.classList.add('processing');
+    icon.textContent='';
+    title.classList.add('processing-title');
+    title.textContent='Pendaftaran Diterima';
+    lead.textContent='Maklumat sedang dihantar dan disimpan ke rekod sekolah. Sila tunggu sebentar…';
+    box.classList.remove('hidden');
+    reminder.className='processing-reminder';
+    reminder.innerHTML='<b>⏳ Sedang diproses:</b> Jangan tutup halaman atau tekan Hantar sekali lagi. Sistem masih bekerja di belakang tabir.';
+    btn.classList.add('hidden');
+  }else if(state==='success'){
+    icon.textContent='✓';
+    title.textContent='Pendaftaran Berjaya Dihantar';
+    lead.textContent='Maklumat murid telah berjaya direkodkan dalam sistem lawatan sekolah.';
+    box.classList.remove('hidden');
+    reminder.className='success-reminder';
+    reminder.innerHTML='<b>📌 Penting:</b> Pendaftaran ini belum mengesahkan tempat. Seat hanya dikunci selepas bayaran pertama <b>RM65</b> diterima dan disahkan oleh guru.';
+    btn.classList.remove('hidden');
+    btn.textContent='Baik, Saya Faham';
+    btn.onclick=closeRegistrationSuccess;
+  }else{
+    icon.classList.add('error-state');
+    icon.textContent='!';
+    title.classList.add('error-title');
+    title.textContent='Pendaftaran Belum Berjaya Disimpan';
+    lead.textContent=message||'Sambungan ke sistem sekolah tidak berjaya. Maklumat yang diisi masih kekal dalam borang.';
+    box.classList.remove('hidden');
+    reminder.className='error';
+    reminder.innerHTML='<b>Jangan risau.</b> Data dalam borang belum dipadam. Tekan “Cuba Semula” untuk menghantar semula.';
+    btn.classList.remove('hidden');
+    btn.textContent='Cuba Semula';
+    btn.onclick=function(){
+      $('registrationSuccessModal').classList.add('hidden');
+      document.body.style.overflow='';
+      $('submitReg').click();
+    };
+  }
+}
+
+function showRegistrationModal(state,name,kelas,message){
+  setRegistrationModalState(state,name,kelas,message);
   $('registrationSuccessModal').classList.remove('hidden');
   document.body.style.overflow='hidden';
 }
+
 function closeRegistrationSuccess(){
   $('registrationSuccessModal').classList.add('hidden');
   document.body.style.overflow='';
   $('registrationCard').scrollIntoView({behavior:'smooth',block:'start'});
 }
+
 $('registrationForm').addEventListener('submit',async e=>{
   e.preventDefault();
   if(registrationSubmitting)return;
@@ -250,39 +303,33 @@ $('registrationForm').addEventListener('submit',async e=>{
     consent:$('consent').checked?'SETUJU':''
   };
 
+  lastRegistrationPayload=payload;
   registrationSubmitting=true;
   setBtn(btn,true,'Hantar Pendaftaran');
-  showSubmitOverlay();
 
-  // Paksa browser render loading state dahulu sebelum request dihantar.
+  // Popup appears immediately before network request begins.
+  showRegistrationModal('processing',selectedStudentName,selectedClass);
+
+  // Allow the browser to paint the popup first, so it feels instant.
   await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-
-  const slowTimer=setTimeout(()=>{
-    if(registrationSubmitting){
-      $('submitProgressTitle').textContent='Sedang menyimpan ke rekod sekolah…';
-      $('submitProgressText').textContent='Sambungan mengambil sedikit masa. Sistem masih memproses pendaftaran anda.';
-    }
-  },2500);
 
   try{
     const d=await apiPost(payload);
     if(!d.ok)throw new Error(d.message||'Pendaftaran gagal.');
 
-    clearTimeout(slowTimer);
-    hideSubmitOverlay();
+    // Morph the same popup into success.
+    setRegistrationModalState('success',selectedStudentName,selectedClass);
 
+    // Clear the form only after the backend confirms success.
     $('registrationForm').reset();
     $('studentId').disabled=true;
     $('studentId').innerHTML='<option value="">Pilih kelas dahulu</option>';
 
-    // Paparkan kejayaan dahulu; refresh statistik dibuat di belakang.
-    showRegistrationSuccess(selectedStudentName,selectedClass);
+    // Refresh stats quietly in the background.
     loadPublicStats().catch(()=>{});
   }catch(err){
-    clearTimeout(slowTimer);
-    hideSubmitOverlay();
-    msg('publicMsg','error',err.message);
-    $('registrationCard').scrollIntoView({behavior:'smooth',block:'start'});
+    // Keep form values and turn the same popup into an error/retry state.
+    setRegistrationModalState('error',selectedStudentName,selectedClass,err.message);
   }finally{
     registrationSubmitting=false;
     setBtn(btn,false,'Hantar Pendaftaran');
