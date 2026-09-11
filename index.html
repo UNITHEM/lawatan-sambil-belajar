@@ -162,7 +162,7 @@
             <form id="registrationForm">
               <div class="form-grid">
                 <div class="field"><label>Kelas *</label><select id="kelas" required><option value="">Memuatkan kelas...</option></select></div>
-                <div class="field"><label>Nama Murid *</label><select id="studentId" required disabled><option value="">Pilih kelas dahulu</option></select></div>
+                <div class="field"><label>Nama Murid *</label><select id="studentId" required disabled><option value="">Pilih kelas dahulu</option></select><div id="studentListStatus" class="help">Senarai nama akan disediakan secara automatik.</div></div>
                 <div class="field"><label>Nama Ibu / Bapa / Penjaga *</label><input id="parentName" autocomplete="name" required placeholder="Nama penuh penjaga"></div>
                 <div class="field"><label>Hubungan *</label><select id="relation" required><option value="">Pilih hubungan</option><option>IBU</option><option>BAPA</option><option>PENJAGA</option></select></div>
                 <div class="field"><label>No. Telefon / WhatsApp *</label><input id="phone" inputmode="tel" autocomplete="tel" required placeholder="Contoh: 0123456789"></div>
@@ -288,9 +288,179 @@ async function apiPost(payload){
     redirect:'follow'
   },35000);
 }
-async function init(){await Promise.allSettled([loadClasses(),loadPublicStats()]);}
-async function loadClasses(){try{const d=await apiGet({action:'classes'});if(!d.ok)throw new Error(d.message);$('kelas').innerHTML='<option value="">Pilih kelas</option>'+d.classes.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');}catch(e){$('kelas').innerHTML='<option value="">Gagal memuatkan kelas</option>';msg('publicMsg','error','Tidak dapat membaca senarai kelas. Semak deployment Apps Script.');}}
-async function loadStudents(){const kelas=$('kelas').value;const sel=$('studentId');sel.disabled=true;sel.innerHTML='<option value="">Memuatkan nama...</option>';if(!kelas){sel.innerHTML='<option value="">Pilih kelas dahulu</option>';return}try{const d=await apiGet({action:'students',kelas});if(!d.ok)throw new Error(d.message);sel.innerHTML='<option value="">Pilih nama anak</option>'+d.students.map(s=>`<option value="${esc(s.studentId)}">${esc(s.name)}</option>`).join('');sel.disabled=false;}catch(e){sel.innerHTML='<option value="">Gagal memuatkan murid</option>';msg('publicMsg','error',e.message)}}
+const STUDENT_CACHE_KEY='lawatanStudentDirectoryV52';
+const STUDENT_CACHE_MAX_AGE=12*60*60*1000; // 12 jam
+const STUDENT_CACHE_STALE_MAX=7*24*60*60*1000; // fallback maksimum 7 hari
+let studentDirectory={classes:[],byClass:{},savedAt:0};
+let studentWarmupStarted=false;
+
+function setStudentListStatus(text){
+  const el=$('studentListStatus');
+  if(el)el.textContent=text||'';
+}
+
+function restoreStudentDirectory(){
+  try{
+    const raw=localStorage.getItem(STUDENT_CACHE_KEY);
+    if(!raw)return false;
+    const parsed=JSON.parse(raw);
+    if(!parsed || !Array.isArray(parsed.classes) || !parsed.byClass)return false;
+    const age=Date.now()-Number(parsed.savedAt||0);
+    if(age>STUDENT_CACHE_STALE_MAX){
+      localStorage.removeItem(STUDENT_CACHE_KEY);
+      return false;
+    }
+    studentDirectory=parsed;
+    return true;
+  }catch(_){
+    return false;
+  }
+}
+
+function saveStudentDirectory(){
+  try{
+    studentDirectory.savedAt=Date.now();
+    localStorage.setItem(STUDENT_CACHE_KEY,JSON.stringify(studentDirectory));
+  }catch(_){}
+}
+
+function renderClassOptions(classes){
+  const current=$('kelas').value;
+  $('kelas').innerHTML='<option value="">Pilih kelas</option>'+
+    classes.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');
+  if(classes.includes(current))$('kelas').value=current;
+}
+
+function hasCachedClass(kelas){
+  return Object.prototype.hasOwnProperty.call(studentDirectory.byClass,kelas);
+}
+
+function renderStudentOptions(kelas,students){
+  const sel=$('studentId');
+  sel.innerHTML='<option value="">Pilih nama anak</option>'+
+    students.map(s=>`<option value="${esc(s.studentId)}">${esc(s.name)}</option>`).join('');
+  sel.disabled=false;
+  setStudentListStatus('⚡ Senarai murid sedia — pilih nama anak.');
+}
+
+async function fetchStudentsForClass(kelas,{silent=false}={}){
+  if(!silent){
+    const sel=$('studentId');
+    sel.disabled=true;
+    sel.innerHTML='<option value="">Sedang menyediakan nama...</option>';
+    setStudentListStatus('Sedang mendapatkan senarai murid…');
+  }
+
+  const d=await apiGet({action:'students',kelas});
+  if(!d || !d.ok)throw new Error((d&&d.message)||'Gagal mendapatkan senarai murid.');
+
+  const students=Array.isArray(d.students)?d.students:[];
+  studentDirectory.byClass[kelas]=students;
+  saveStudentDirectory();
+
+  if(!silent && $('kelas').value===kelas){
+    renderStudentOptions(kelas,students);
+  }
+  return students;
+}
+
+async function warmStudentDirectory(classes){
+  if(studentWarmupStarted)return;
+  studentWarmupStarted=true;
+
+  // Beri keutamaan kepada paparan utama dahulu.
+  await wait(700);
+
+  for(const kelas of classes){
+    if(hasCachedClass(kelas))continue;
+    try{
+      await fetchStudentsForClass(kelas,{silent:true});
+    }catch(e){
+      console.warn('Background student preload failed:',kelas,e);
+    }
+    // Elakkan banyak request dihantar serentak ke Apps Script.
+    await wait(220);
+  }
+
+  if($('kelas').value && hasCachedClass($('kelas').value)){
+    setStudentListStatus('⚡ Senarai murid sedia — pilih nama anak.');
+  }
+}
+
+async function init(){
+  const hasLocal=restoreStudentDirectory();
+
+  // Jika browser pernah buka portal, kelas muncul serta-merta tanpa tunggu Google.
+  if(hasLocal && studentDirectory.classes.length){
+    renderClassOptions(studentDirectory.classes);
+    setStudentListStatus('⚡ Senarai murid sedang disediakan di belakang tabir.');
+  }
+
+  // Statistik dan refresh directory berjalan tanpa menghalang parent membaca halaman.
+  loadPublicStats().catch(()=>{});
+  loadClasses(hasLocal).catch(()=>{});
+}
+
+async function loadClasses(hasLocal=false){
+  try{
+    const d=await apiGet({action:'classes'});
+    if(!d || !d.ok)throw new Error((d&&d.message)||'Gagal membaca kelas.');
+
+    const classes=Array.isArray(d.classes)?d.classes:[];
+    studentDirectory.classes=classes;
+    renderClassOptions(classes);
+    saveStudentDirectory();
+
+    // Preload nama semasa parent sedang membaca Maklumat Penting.
+    warmStudentDirectory(classes);
+  }catch(e){
+    if(studentDirectory.classes.length){
+      // Cache lama masih boleh digunakan; backend tetap validate ketika submit.
+      renderClassOptions(studentDirectory.classes);
+      setStudentListStatus('Senarai simpanan digunakan sementara sambungan Google diperbaharui.');
+      warmStudentDirectory(studentDirectory.classes);
+    }else{
+      $('kelas').innerHTML='<option value="">Gagal memuatkan kelas</option>';
+      setStudentListStatus('Tidak dapat mendapatkan senarai kelas buat masa ini.');
+      msg('publicMsg','error','Tidak dapat membaca senarai kelas. Cuba refresh halaman.');
+    }
+  }
+}
+
+async function loadStudents(){
+  const kelas=$('kelas').value;
+  const sel=$('studentId');
+
+  if(!kelas){
+    sel.disabled=true;
+    sel.innerHTML='<option value="">Pilih kelas dahulu</option>';
+    setStudentListStatus('Pilih kelas untuk melihat nama murid.');
+    return;
+  }
+
+  // Laluan instant: langsung tidak tunggu Google Sheet.
+  if(hasCachedClass(kelas)){
+    renderStudentOptions(kelas,studentDirectory.byClass[kelas]||[]);
+
+    // Jika cache sudah lama, refresh kelas ini secara senyap.
+    const age=Date.now()-Number(studentDirectory.savedAt||0);
+    if(age>STUDENT_CACHE_MAX_AGE){
+      fetchStudentsForClass(kelas,{silent:true}).catch(()=>{});
+    }
+    return;
+  }
+
+  // First visit dan background preload belum sampai ke kelas ini.
+  try{
+    const students=await fetchStudentsForClass(kelas,{silent:false});
+    if($('kelas').value===kelas)renderStudentOptions(kelas,students);
+  }catch(e){
+    sel.disabled=true;
+    sel.innerHTML='<option value="">Gagal memuatkan murid</option>';
+    setStudentListStatus('Sambungan Google perlahan. Cuba pilih kelas sekali lagi.');
+  }
+}
+
 $('kelas').addEventListener('change',loadStudents);
 async function loadPublicStats(){try{const d=await apiGet({action:'publicStats'});if(d.ok){$('statConfirmed').textContent=d.stats.confirmed;$('statAvailable').textContent=d.stats.available;$('statFullPaid').textContent=d.stats.fullPaid;}}catch(e){console.warn(e)}}
 let registrationSubmitting=false;
@@ -404,6 +574,7 @@ $('registrationForm').addEventListener('submit',async e=>{
     $('registrationForm').reset();
     $('studentId').disabled=true;
     $('studentId').innerHTML='<option value="">Pilih kelas dahulu</option>';
+    setStudentListStatus('Pilih kelas untuk melihat nama murid.');
 
     // Refresh stats quietly in the background.
     loadPublicStats().catch(()=>{});
