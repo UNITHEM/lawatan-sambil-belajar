@@ -242,7 +242,26 @@
   <div id="paymentModal" class="modal-backdrop hidden"><div class="modal"><div class="modal-head"><h3>Rekod Pembayaran</h3><button class="close" onclick="closeModal('paymentModal')">×</button></div><div class="modal-body" id="paymentBody"></div></div></div>
   <div id="deleteModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="deleteStateTitle">
     <div class="success-modal">
-      <div class="success-modal-body" id="deleteBody"></div>
+      <div class="success-modal-body">
+        <div id="deleteStateIcon" class="success-check processing"></div>
+        <h2 id="deleteStateTitle" class="processing-title">Sedang Memadam Data</h2>
+        <p id="deleteStateLead" class="lead">Sila tunggu sebentar. Rekod sedang dikemas kini dalam sistem sekolah.</p>
+
+        <div class="success-student">
+          <small>Murid</small>
+          <strong id="deleteStudentName">—</strong>
+          <small style="margin-top:8px">Kelas</small>
+          <strong id="deleteStudentClass">—</strong>
+        </div>
+
+        <div id="deleteStateReminder" class="processing-reminder">
+          <b>⏳ Sedang diproses:</b> Data PENDAFTARAN, PEMBAYARAN dan SENARAI_BAS sedang diselaraskan.
+        </div>
+
+        <div class="success-actions">
+          <button id="deleteStateBtn" class="btn btn-primary hidden" type="button" onclick="closeDeleteModal()">Selesai</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1012,57 +1031,64 @@ function closeDeleteModal(){
   document.body.style.overflow='';
 }
 
-function showDeleteProcessing(student){
-  const p=student.payment||{};
-  const paid=Number(p.totalPaid||0);
-  $('deleteBody').innerHTML=`
-    <div class="payment-state" role="status" aria-live="polite">
-      <div class="payment-state-icon loading"><div class="payment-spinner"></div></div>
-      <h3 id="deleteStateTitle">Sedang Memadam Data…</h3>
-      <p class="state-lead">Sila tunggu sebentar. Sistem sedang mengemas kini rekod Google Sheet sekolah.</p>
-      <div class="delete-summary">
-        <div class="delete-summary-row"><span>Nama Murid</span><b>${esc(student.name)}</b></div>
-        <div class="delete-summary-row"><span>Kelas</span><b>${esc(student.kelas)}</b></div>
-        <div class="delete-summary-row"><span>Bayaran Direkod</span><b>${money(paid)}</b></div>
-        ${p.bus?`<div class="delete-summary-row"><span>Seat</span><b>${esc(p.bus)} • Seat ${esc(p.seatNo)}</b></div>`:''}
-      </div>
-      <div class="delete-process-note"><b>⏳ Sedang diproses:</b> Rekod berkaitan dalam <b>PENDAFTARAN, PEMBAYARAN</b> dan <b>SENARAI_BAS</b> sedang diselaraskan. Jangan tekan Padam kali kedua.</div>
-    </div>`;
-  showDeleteModal();
-}
+function setDeletePopupState(state,student,message){
+  const icon=$('deleteStateIcon');
+  const title=$('deleteStateTitle');
+  const lead=$('deleteStateLead');
+  const reminder=$('deleteStateReminder');
+  const btn=$('deleteStateBtn');
 
-function showDeleteSuccess(student){
-  const p=student.payment||{};
-  const paid=Number(p.totalPaid||0);
-  $('deleteBody').innerHTML=`
-    <div class="payment-state">
-      <div class="payment-state-icon successful">✓</div>
-      <h3 id="deleteStateTitle" class="ok">Data Berjaya Dipadam</h3>
-      <p class="state-lead">Rekod murid telah berjaya dibuang daripada sistem pengurusan lawatan.</p>
-      <div class="delete-summary">
-        <div class="delete-summary-row"><span>Nama Murid</span><b>${esc(student.name)}</b></div>
-        <div class="delete-summary-row"><span>Kelas</span><b>${esc(student.kelas)}</b></div>
-        ${paid>0?`<div class="delete-summary-row"><span>Rekod Bayaran Dipadam</span><b>${money(paid)}</b></div>`:''}
-        ${p.bus?`<div class="delete-summary-row"><span>Seat Dilepaskan</span><b>${esc(p.bus)} • Seat ${esc(p.seatNo)}</b></div>`:''}
-      </div>
-      <div class="delete-success-note"><b>✅ Selesai.</b> Nama murid dalam <b>MASTER_MURID</b> masih kekal, jadi ibu bapa boleh membuat pendaftaran semula jika diperlukan.</div>
-      <div class="payment-state-actions">
-        <button class="btn btn-primary" type="button" onclick="closeDeleteModal()">Selesai</button>
-      </div>
-    </div>`;
-}
+  $('deleteStudentName').textContent=student?.name||'—';
+  $('deleteStudentClass').textContent=student?.kelas||'—';
 
-function showDeleteError(student,message){
-  $('deleteBody').innerHTML=`
-    <div class="payment-state">
-      <div class="payment-state-icon failed">!</div>
-      <h3 id="deleteStateTitle" class="bad">Data Belum Dapat Dipadam</h3>
-      <p class="state-lead">${esc(message||'Sambungan ke sistem Google terganggu.')}</p>
-      <div class="payment-error-note"><b>⚠️ Jangan tekan Padam berulang kali.</b> Sistem telah cuba menyemak status rekod. Tutup popup ini dan Refresh Portal Guru sebelum mencuba semula.</div>
-      <div class="payment-state-actions">
-        <button class="btn btn-soft" type="button" onclick="closeDeleteModal();loadTeacherData(false)">Tutup & Refresh</button>
-      </div>
-    </div>`;
+  icon.className='success-check';
+  title.className='';
+  btn.className='btn btn-primary';
+  btn.onclick=closeDeleteModal;
+
+  if(state==='processing'){
+    icon.classList.add('processing');
+    icon.textContent='';
+    title.classList.add('processing-title');
+    title.textContent='Sedang Memadam Data';
+    lead.textContent='Sila tunggu sebentar. Rekod sedang dikemas kini dalam sistem sekolah.';
+    reminder.className='processing-reminder';
+    reminder.innerHTML='<b>⏳ Sedang diproses:</b> Data <b>PENDAFTARAN, PEMBAYARAN</b> dan <b>SENARAI_BAS</b> sedang diselaraskan.';
+    btn.classList.add('hidden');
+  }else if(state==='waiting'){
+    icon.classList.add('processing');
+    icon.textContent='';
+    title.classList.add('processing-title');
+    title.textContent='Hampir Selesai…';
+    lead.textContent='Google Sheet masih sedang menyelesaikan proses pemadaman. Sila tunggu sebentar lagi.';
+    reminder.className='processing-reminder';
+    reminder.innerHTML='<b>🔄 Masih menyegerakkan:</b> Jangan tutup popup atau tekan Padam sekali lagi.';
+    btn.classList.add('hidden');
+  }else if(state==='success'){
+    icon.textContent='✓';
+    title.textContent='Data Berjaya Dipadam';
+    lead.textContent='Rekod murid telah berjaya dibuang daripada sistem pengurusan lawatan.';
+    reminder.className='success-reminder';
+    reminder.innerHTML='<b>✅ Selesai.</b> Nama murid dalam <b>MASTER_MURID</b> masih kekal, jadi ibu bapa boleh membuat pendaftaran semula jika diperlukan.';
+    btn.classList.remove('hidden');
+    btn.textContent='Selesai';
+  }else{
+    icon.classList.add('error-state');
+    icon.textContent='!';
+    title.classList.add('error-title');
+    title.textContent='Data Belum Dapat Dipadam';
+    lead.textContent=message||'Sambungan ke sistem Google terganggu.';
+    reminder.className='error';
+    reminder.innerHTML='<b>⚠️ Jangan tekan Padam berulang kali.</b> Tekan “Tutup & Refresh” untuk semak status terkini sebelum mencuba semula.';
+    btn.classList.remove('hidden');
+    btn.className='btn btn-soft';
+    btn.textContent='Tutup & Refresh';
+    btn.onclick=function(){
+      $('deleteModal').classList.add('hidden');
+      document.body.style.overflow='';
+      loadTeacherData(false);
+    };
+  }
 }
 
 function applyDeleteLocally(student){
@@ -1072,6 +1098,11 @@ function applyDeleteLocally(student){
 
   teacherDATA=teacherDATA.filter(x=>String(x.studentId)!==String(student.studentId));
   teacherSTATS=teacherSTATS||{};
+
+  // Registered count on teacher dashboard
+  if(typeof teacherSTATS.registered!=='undefined'){
+    teacherSTATS.registered=Math.max(0,Number(teacherSTATS.registered||0)-1);
+  }
 
   if(confirmed){
     teacherSTATS.confirmed=Math.max(0,Number(teacherSTATS.confirmed||0)-1);
@@ -1142,14 +1173,21 @@ async function deleteStudentRecord(id){
 
   deleteSubmitting=true;
   msg('teacherMsg','','');
-  showDeleteProcessing(r);
 
-  // Pastikan browser sempat render spinner sebelum request dihantar.
+  setDeletePopupState('processing',r);
+  showDeleteModal();
+
+  // Pastikan popup + spinner render dahulu.
   await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+
   const startedAt=Date.now();
+  let waitingTimer=setTimeout(()=>{
+    if(deleteSubmitting)setDeletePopupState('waiting',r);
+  },3000);
 
   try{
     let d;
+
     try{
       d=await apiPost({
         action:'deleteStudent',
@@ -1158,7 +1196,6 @@ async function deleteStudentRecord(id){
         teacherName:currentTeacher
       });
     }catch(connectionError){
-      // Ada kemungkinan Google sudah memadam tetapi response balik terganggu.
       const deleted=await reconcileDeleteAfterConnectionError(id);
       if(deleted){
         d={ok:true,reconciled:true,message:'Rekod telah dipadam.'};
@@ -1169,18 +1206,24 @@ async function deleteStudentRecord(id){
 
     if(!d || !d.ok)throw new Error((d&&d.message)||'Gagal memadam rekod.');
 
-    // Beri sedikit masa minimum supaya transisi spinner -> success terasa natural.
+    // Spinner sentiasa dipaparkan sekurang-kurangnya 3 saat.
     const elapsed=Date.now()-startedAt;
-    if(elapsed<850)await wait(850-elapsed);
+    if(elapsed<3000)await wait(3000-elapsed);
+
+    clearTimeout(waitingTimer);
 
     if(!d.reconciled){
       applyDeleteLocally(r);
     }
 
-    showDeleteSuccess(r);
+    setDeletePopupState('success',r);
     scheduleDeleteBackgroundSync();
   }catch(e){
-    showDeleteError(r,e.message);
+    clearTimeout(waitingTimer);
+    // Kekalkan minimum 3s supaya popup tidak berkelip terlalu cepat.
+    const elapsed=Date.now()-startedAt;
+    if(elapsed<3000)await wait(3000-elapsed);
+    setDeletePopupState('error',r,e.message);
   }finally{
     deleteSubmitting=false;
   }
