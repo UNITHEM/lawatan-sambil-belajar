@@ -513,9 +513,15 @@ async function loadStudents(){
 
 $('kelas').addEventListener('change',loadStudents);
 
+function extractYearFromClass(kelas){
+  const text=String(kelas||'').trim();
+  const match=text.match(/\b([1-6])\b/);
+  return match ? match[1] : text;
+}
+
 $('kelas').addEventListener('change',()=>{
   const el=$('jpnClassDisplay');
-  if(el)el.value=$('kelas').value||'';
+  if(el)el.value=extractYearFromClass($('kelas').value);
   const gender=$('gender');
   if(gender)gender.value='';
 });
