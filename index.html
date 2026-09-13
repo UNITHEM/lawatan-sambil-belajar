@@ -37,6 +37,14 @@
     /* Teacher */
     .teacher-shell{min-height:100vh}.teacher-hero{background:linear-gradient(135deg,#0a356a,#154f88);color:#fff;padding:30px 0}.teacher-hero .wrap{padding-top:0;padding-bottom:0}.teacher-hero h1{font-size:32px;margin:7px 0}.teacher-hero p{color:#d9eaff;margin:0}.login-card{max-width:470px;margin:60px auto;background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:28px}.login-card h2{margin:0 0 5px}.login-card p{margin:0 0 20px;color:var(--muted)}
     .teacher-stats{grid-template-columns:repeat(5,1fr);margin-top:22px}
+    
+    .role-badge{display:inline-flex;align-items:center;gap:7px;margin-top:7px;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:850;border:1px solid rgba(255,255,255,.22);width:max-content}
+    .role-badge.leader{background:rgba(255,216,104,.16);color:#ffe6a1}
+    .role-badge.teacher{background:rgba(168,216,255,.13);color:#d9edff}
+    .role-badge::before{font-size:13px}
+    .role-badge.leader::before{content:"👑"}
+    .role-badge.teacher::before{content:"💳"}
+
     .teacher-sync{display:flex;align-items:center;gap:7px;color:#d9eaff;font-size:12px;font-weight:750;margin-top:8px;min-height:18px}
     .teacher-sync-dot{width:8px;height:8px;border-radius:50%;background:#8bd3a8;box-shadow:0 0 0 3px rgba(139,211,168,.15)}
     .teacher-sync.syncing .teacher-sync-dot{background:#ffd36b;animation:pulseDot 1s ease-in-out infinite}
@@ -198,14 +206,14 @@
   <div id="teacherView" class="teacher-shell hidden">
     <div id="teacherLoginPanel">
       <header class="topbar"><div class="topbar-in"><div class="brand"><div class="brand-icon">🚌</div><div><b>Portal Guru</b><span>Pengurusan lawatan & pembayaran</span></div></div><button class="btn btn-soft" onclick="showPublic()">← Kembali</button></div></header>
-      <div class="login-card"><div style="font-size:35px;margin-bottom:12px">🔐</div><h2>Akses Guru</h2><p>Masukkan nama guru dan PIN Portal Guru.</p><div id="loginMsg"></div><div class="field" style="margin-bottom:13px"><label>Nama Guru</label><input id="teacherName" placeholder="Contoh: Cikgu Safuan"></div><div class="field" style="margin-bottom:17px"><label>PIN Guru</label><input id="teacherPin" type="password" inputmode="numeric" placeholder="••••"></div><button class="btn btn-primary" style="width:100%" onclick="teacherLogin()" id="loginBtn">Masuk Portal Guru</button></div>
+      <div class="login-card"><div style="font-size:35px;margin-bottom:12px">🔐</div><h2>Akses Guru</h2><p>Masukkan nama guru dan PIN akses. Sistem akan mengenal pasti akses Guru atau Ketua Rombongan secara automatik.</p><div id="loginMsg"></div><div class="field" style="margin-bottom:13px"><label>Nama Guru</label><input id="teacherName" placeholder="Contoh: Cikgu Safuan"></div><div class="field" style="margin-bottom:17px"><label>PIN Akses</label><input id="teacherPin" type="password" inputmode="numeric" placeholder="••••"></div><button class="btn btn-primary" style="width:100%" onclick="teacherLogin()" id="loginBtn">Masuk Portal Guru</button></div>
     </div>
 
     <div id="teacherDashboard" class="hidden">
-      <section class="teacher-hero"><div class="wrap"><div style="display:flex;align-items:center;justify-content:space-between;gap:15px"><div><div class="eyebrow">🔐 PORTAL GURU</div><h1>Dashboard Pengurusan Lawatan</h1><p id="teacherWelcome"></p><div id="teacherSync" class="teacher-sync"><span class="teacher-sync-dot"></span><span id="teacherSyncText">Data sedia</span></div></div><div style="display:flex;gap:8px"><button class="btn btn-soft" id="teacherRefreshBtn" onclick="loadTeacherData(false)">↻ Refresh</button><button class="btn btn-danger" onclick="teacherLogout()">Keluar</button></div></div></div></section>
+      <section class="teacher-hero"><div class="wrap"><div style="display:flex;align-items:center;justify-content:space-between;gap:15px"><div><div class="eyebrow">🔐 PORTAL GURU</div><h1>Dashboard Pengurusan Lawatan</h1><p id="teacherWelcome"></p><div id="teacherRoleBadge" class="role-badge hidden"></div><div id="teacherSync" class="teacher-sync"><span class="teacher-sync-dot"></span><span id="teacherSyncText">Data sedia</span></div></div><div style="display:flex;gap:8px"><button class="btn btn-soft" id="teacherRefreshBtn" onclick="loadTeacherData(false)">↻ Refresh</button><button class="btn btn-danger" onclick="teacherLogout()">Keluar</button></div></div></div></section>
       <main class="wrap">
         <section class="stats teacher-stats"><div class="stat"><small>Berdaftar</small><strong id="tRegistered">0</strong></div><div class="stat"><small>Seat Confirmed</small><strong id="tConfirmed">0</strong></div><div class="stat"><small>Tempat Kosong</small><strong id="tAvailable">74</strong></div><div class="stat"><small>Bayar Penuh</small><strong id="tFullPaid">0</strong></div><div class="stat"><small>Jumlah Kutipan</small><strong id="tCollected" style="font-size:23px">RM0</strong></div></section>
-        <div class="toolbar"><input id="searchStudent" class="search" placeholder="Cari nama murid / kelas / penjaga..." oninput="renderTeacherTable()"><select id="paymentFilter" class="filter" onchange="renderTeacherTable()"><option value="ALL">Semua Status</option><option value="UNPAID">Belum Bayar</option><option value="INSTALLMENT">Ansuran RM65</option><option value="FULL">Bayar Penuh</option><option value="CONFIRMED">Seat Confirmed</option></select><select id="classFilter" class="filter" onchange="renderTeacherTable()"><option value="ALL">Semua Kelas</option></select><button class="btn btn-soft" onclick="cleanupOrphans()">🧹 Bersihkan Data Tertinggal</button></div>
+        <div class="toolbar"><input id="searchStudent" class="search" placeholder="Cari nama murid / kelas / penjaga..." oninput="renderTeacherTable()"><select id="paymentFilter" class="filter" onchange="renderTeacherTable()"><option value="ALL">Semua Status</option><option value="UNPAID">Belum Bayar</option><option value="INSTALLMENT">Ansuran RM65</option><option value="FULL">Bayar Penuh</option><option value="CONFIRMED">Seat Confirmed</option></select><select id="classFilter" class="filter" onchange="renderTeacherTable()"><option value="ALL">Semua Kelas</option></select><button id="leaderCleanupBtn" class="btn btn-soft hidden" onclick="cleanupOrphans()">🧹 Bersihkan Data Tertinggal</button></div>
         <div id="teacherMsg"></div>
         <div class="table-card"><div class="table-scroll"><table class="data-table"><thead><tr><th>Nama Murid</th><th>Kelas</th><th>Bayaran</th><th>Baki</th><th>Status Seat</th><th>Bas / Seat</th><th>Penjaga</th><th>Tindakan</th></tr></thead><tbody id="teacherRows"><tr><td colspan="8">Memuatkan data...</td></tr></tbody></table></div></div>
       </main>
@@ -267,7 +275,7 @@
 
 <script>
 const API_URL='https://script.google.com/macros/s/AKfycbyUb8uCTZyxSzcPih2-2fkKqPXyvFSEpDv0ZsewB9pu9TWAcsFi1ujgZrpaxz9rM4rd/exec';
-let teacherPIN=''; let teacherDATA=[]; let teacherSTATS={}; let currentTeacher='';
+let teacherPIN=''; let teacherDATA=[]; let teacherSTATS={}; let currentTeacher=''; let teacherRole='';
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const money=n=>'RM'+Number(n||0).toLocaleString('ms-MY',{minimumFractionDigits:0,maximumFractionDigits:2});
@@ -622,24 +630,54 @@ $('registrationForm').addEventListener('submit',async e=>{
 function scrollToForm(){$('registrationFormSection').scrollIntoView({behavior:'smooth',block:'start'})}
 function showTeacherLogin(){$('publicView').classList.add('hidden');$('teacherView').classList.remove('hidden');$('teacherLoginPanel').classList.remove('hidden');$('teacherDashboard').classList.add('hidden');window.scrollTo(0,0)}
 function showPublic(){$('teacherView').classList.add('hidden');$('publicView').classList.remove('hidden');window.scrollTo(0,0);loadPublicStats()}
+function applyTeacherRoleUI(){
+  const isLeader=teacherRole==='leader';
+  const badge=$('teacherRoleBadge');
+  const cleanup=$('leaderCleanupBtn');
+
+  if(badge){
+    badge.classList.remove('hidden','leader','teacher');
+    badge.classList.add(isLeader?'leader':'teacher');
+    badge.textContent=isLeader?'Ketua Rombongan • Akses Penuh':'Guru • Rekod Pembayaran';
+  }
+
+  if(cleanup){
+    cleanup.classList.toggle('hidden',!isLeader);
+  }
+
+  // Tindakan setiap row bergantung pada role.
+  if(teacherDATA.length)renderTeacherTable();
+}
+
 async function teacherLogin(){
   const pin=$('teacherPin').value.trim();
   const name=$('teacherName').value.trim();
+
   if(!name){msg('loginMsg','error','Masukkan nama guru.');return}
-  if(!pin){msg('loginMsg','error','Masukkan PIN guru.');return}
+  if(!pin){msg('loginMsg','error','Masukkan PIN akses.');return}
+
   const btn=$('loginBtn');
   setBtn(btn,true,'Masuk Portal Guru');
+
   try{
     const d=await apiPost({action:'verifyTeacher',pin});
-    if(!d.ok)throw new Error('PIN guru tidak sah.');
+    if(!d || !d.ok)throw new Error((d&&d.message)||'PIN akses tidak sah.');
+
     teacherPIN=pin;
+    teacherRole=d.role==='leader'?'leader':'teacher';
     currentTeacher=name;
+
     sessionStorage.setItem('teacherName',name);
+
     $('teacherWelcome').textContent=`Log masuk sebagai ${name}`;
     $('teacherLoginPanel').classList.add('hidden');
     $('teacherDashboard').classList.remove('hidden');
+
+    applyTeacherRoleUI();
     await loadTeacherData(false);
   }catch(e){
+    teacherPIN='';
+    teacherRole='';
     msg('loginMsg','error',e.message);
   }finally{
     setBtn(btn,false,'Masuk Portal Guru');
@@ -648,12 +686,24 @@ async function teacherLogin(){
 
 function teacherLogout(){
   teacherPIN='';
+  teacherRole='';
   teacherDATA=[];
   teacherSTATS={};
   currentTeacher='';
+
   $('teacherPin').value='';
   $('teacherDashboard').classList.add('hidden');
   $('teacherLoginPanel').classList.remove('hidden');
+
+  const badge=$('teacherRoleBadge');
+  if(badge){
+    badge.className='role-badge hidden';
+    badge.textContent='';
+  }
+
+  const cleanup=$('leaderCleanupBtn');
+  if(cleanup)cleanup.classList.add('hidden');
+
   msg('loginMsg','','');
 }
 
@@ -749,10 +799,74 @@ async function loadTeacherData(silent=false){
 
 function renderStats(){$('tRegistered').textContent=teacherDATA.length;$('tConfirmed').textContent=teacherSTATS.confirmed||0;$('tAvailable').textContent=teacherSTATS.available??74;$('tFullPaid').textContent=teacherSTATS.fullPaid||0;$('tCollected').textContent=money(teacherSTATS.totalCollected||0)}
 function buildClassFilter(){const current=$('classFilter').value;const cls=[...new Set(teacherDATA.map(x=>x.kelas).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'ms'));$('classFilter').innerHTML='<option value="ALL">Semua Kelas</option>'+cls.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');if(cls.includes(current))$('classFilter').value=current}
-function renderTeacherTable(){const q=$('searchStudent').value.trim().toLowerCase();const pf=$('paymentFilter').value;const cf=$('classFilter').value;const rows=teacherDATA.filter(r=>{const p=r.payment||{};const hay=`${r.name} ${r.kelas} ${r.parentName}`.toLowerCase();if(q&&!hay.includes(q))return false;if(cf!=='ALL'&&String(r.kelas)!==cf)return false;if(pf==='UNPAID'&&Number(p.totalPaid)!==0)return false;if(pf==='INSTALLMENT'&&Number(p.totalPaid)!==65)return false;if(pf==='FULL'&&Number(p.totalPaid)<130)return false;if(pf==='CONFIRMED'&&String(p.seatStatus)!=='CONFIRMED')return false;return true});
-$('teacherRows').innerHTML=rows.length?rows.map(r=>{const p=r.payment||{};const paid=Number(p.totalPaid||0),bal=Number(p.balance??130);const payBadge=paid>=130?'<span class="badge b-green">Bayar Penuh</span>':paid>=65?'<span class="badge b-amber">RM65 / RM130</span>':'<span class="badge b-gray">Belum Bayar</span>';const seat=String(p.seatStatus)==='CONFIRMED'?'<span class="badge b-green">Confirmed</span>':'<span class="badge b-gray">Belum Confirm</span>';const bus=p.bus?`${esc(p.bus)} • Seat ${esc(p.seatNo)}`:'—';const payBtn=paid>=130?'':`<button class="mini-btn pay" onclick="openPayment('${esc(r.studentId)}')">💳 ${paid===65?'Bayar Baki':'Rekod Bayaran'}</button>`;return `<tr><td><div class="student-name">${esc(r.name)}</div><small style="color:var(--muted)">${esc(r.studentId)}</small></td><td>${esc(r.kelas)}</td><td>${payBadge}<div style="margin-top:5px;font-weight:800">${money(paid)}</div></td><td>${money(bal)}</td><td>${seat}</td><td>${bus}</td><td>${esc(r.parentName)}<br><small style="color:var(--muted)">${esc(r.phone)}</small></td><td><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="mini-btn" onclick="openDetail('${esc(r.studentId)}')">Lihat</button>${payBtn}<button class="mini-btn delete" onclick="deleteStudentRecord('${esc(r.studentId)}')">🗑 Padam</button></div></td></tr>`}).join(''):'<tr><td colspan="8">Tiada rekod yang sepadan.</td></tr>'}
+function renderTeacherTable(){
+  const q=$('searchStudent').value.trim().toLowerCase();
+  const pf=$('paymentFilter').value;
+  const cf=$('classFilter').value;
+
+  const rows=teacherDATA.filter(r=>{
+    const p=r.payment||{};
+    const hay=`${r.name} ${r.kelas} ${r.parentName}`.toLowerCase();
+    if(q&&!hay.includes(q))return false;
+    if(cf!=='ALL'&&String(r.kelas)!==cf)return false;
+    if(pf==='UNPAID'&&Number(p.totalPaid)!==0)return false;
+    if(pf==='INSTALLMENT'&&Number(p.totalPaid)!==65)return false;
+    if(pf==='FULL'&&Number(p.totalPaid)<130)return false;
+    if(pf==='CONFIRMED'&&String(p.seatStatus)!=='CONFIRMED')return false;
+    return true;
+  });
+
+  const isLeader=teacherRole==='leader';
+
+  $('teacherRows').innerHTML=rows.length
+    ? rows.map(r=>{
+        const p=r.payment||{};
+        const paid=Number(p.totalPaid||0);
+        const bal=Number(p.balance??130);
+
+        const payBadge=paid>=130
+          ? '<span class="badge b-green">Bayar Penuh</span>'
+          : paid>=65
+            ? '<span class="badge b-amber">RM65 / RM130</span>'
+            : '<span class="badge b-gray">Belum Bayar</span>';
+
+        const seat=String(p.seatStatus)==='CONFIRMED'
+          ? '<span class="badge b-green">Confirmed</span>'
+          : '<span class="badge b-gray">Belum Confirm</span>';
+
+        const bus=p.bus?`${esc(p.bus)} • Seat ${esc(p.seatNo)}`:'—';
+
+        const payBtn=paid>=130
+          ? ''
+          : `<button class="mini-btn pay" onclick="openPayment('${esc(r.studentId)}')">💳 ${paid===65?'Bayar Baki':'Rekod Bayaran'}</button>`;
+
+        let actions='';
+
+        if(isLeader){
+          actions=`
+            <button class="mini-btn" onclick="openDetail('${esc(r.studentId)}')">Lihat</button>
+            ${payBtn}
+            <button class="mini-btn delete" onclick="deleteStudentRecord('${esc(r.studentId)}')">🗑 Padam</button>
+          `;
+        }else{
+          actions=payBtn || '<span class="badge b-green">Bayaran Selesai</span>';
+        }
+
+        return `<tr>
+          <td><div class="student-name">${esc(r.name)}</div><small style="color:var(--muted)">${esc(r.studentId)}</small></td>
+          <td>${esc(r.kelas)}</td>
+          <td>${payBadge}<div style="margin-top:5px;font-weight:800">${money(paid)}</div></td>
+          <td>${money(bal)}</td>
+          <td>${seat}</td>
+          <td>${bus}</td>
+          <td>${esc(r.parentName)}<br><small style="color:var(--muted)">${esc(r.phone)}</small></td>
+          <td><div style="display:flex;gap:6px;flex-wrap:wrap">${actions}</div></td>
+        </tr>`;
+      }).join('')
+    : '<tr><td colspan="8">Tiada rekod yang sepadan.</td></tr>';
+}
 function findStudent(id){return teacherDATA.find(x=>String(x.studentId)===String(id))}
-function openDetail(id){const r=findStudent(id);if(!r)return;const p=r.payment||{};$('detailBody').innerHTML=`<div class="details"><div class="detail"><small>Nama Murid</small><b>${esc(r.name)}</b></div><div class="detail"><small>Kelas</small><b>${esc(r.kelas)}</b></div><div class="detail"><small>Nama Penjaga</small><b>${esc(r.parentName)}</b></div><div class="detail"><small>Hubungan</small><b>${esc(r.relation)}</b></div><div class="detail"><small>No. Telefon</small><b>${esc(r.phone)}</b></div><div class="detail"><small>No. Kecemasan</small><b>${esc(r.emergencyPhone||'—')}</b></div><div class="detail full"><small>Alamat Penuh</small><div>${esc(r.address)}</div></div><div class="detail"><small>Bayaran</small><b>${money(p.totalPaid||0)} / RM130</b></div><div class="detail"><small>Seat</small><b>${esc(p.bus||'Belum Confirm')} ${p.seatNo?'• Seat '+esc(p.seatNo):''}</b></div></div>`;$('detailModal').classList.remove('hidden')}
+function openDetail(id){if(teacherRole!=='leader'){msg('teacherMsg','error','Akses ini hanya untuk Ketua Rombongan.');return}const r=findStudent(id);if(!r)return;const p=r.payment||{};$('detailBody').innerHTML=`<div class="details"><div class="detail"><small>Nama Murid</small><b>${esc(r.name)}</b></div><div class="detail"><small>Kelas</small><b>${esc(r.kelas)}</b></div><div class="detail"><small>Nama Penjaga</small><b>${esc(r.parentName)}</b></div><div class="detail"><small>Hubungan</small><b>${esc(r.relation)}</b></div><div class="detail"><small>No. Telefon</small><b>${esc(r.phone)}</b></div><div class="detail"><small>No. Kecemasan</small><b>${esc(r.emergencyPhone||'—')}</b></div><div class="detail full"><small>Alamat Penuh</small><div>${esc(r.address)}</div></div><div class="detail"><small>Bayaran</small><b>${money(p.totalPaid||0)} / RM130</b></div><div class="detail"><small>Seat</small><b>${esc(p.bus||'Belum Confirm')} ${p.seatNo?'• Seat '+esc(p.seatNo):''}</b></div></div>`;$('detailModal').classList.remove('hidden')}
 function openPayment(id){const r=findStudent(id);if(!r)return;const p=r.payment||{},paid=Number(p.totalPaid||0);let choices='';if(paid===0){choices=`<div class="pay-choices"><button class="pay-choice" onclick="confirmPayment('${esc(id)}',65)"><strong>RM65</strong><span>Ansuran pertama — terus lock seat</span></button><button class="pay-choice" onclick="confirmPayment('${esc(id)}',130)"><strong>RM130</strong><span>Bayar penuh terus</span></button></div>`}else if(paid===65){choices=`<button class="pay-choice" style="width:100%" onclick="confirmPayment('${esc(id)}',65)"><strong>RM65</strong><span>Bayaran baki — lengkap RM130</span></button>`}else{choices='<div class="success">Bayaran murid ini telah selesai.</div>'}$('paymentBody').innerHTML=`<div style="margin-bottom:18px"><b style="font-size:19px">${esc(r.name)}</b><div style="color:var(--muted);margin-top:3px">${esc(r.kelas)} • Telah bayar ${money(paid)} • Baki ${money(p.balance??130)}</div></div><div id="payModalMsg"></div>${choices}<p class="help" style="margin-top:16px">Pastikan wang telah diterima sebelum menekan pilihan bayaran. Rekod ini akan dikongsi kepada semua guru melalui dashboard.</p>`;$('paymentModal').classList.remove('hidden')}
 let paymentSubmitting=false;
 
@@ -1158,6 +1272,7 @@ function scheduleDeleteBackgroundSync(){
 }
 
 async function deleteStudentRecord(id){
+  if(teacherRole!=='leader'){msg('teacherMsg','error','Hanya Ketua Rombongan dibenarkan memadam data murid.');return}
   if(deleteSubmitting)return;
   const r=findStudent(id);
   if(!r)return;
@@ -1230,6 +1345,7 @@ async function deleteStudentRecord(id){
 }
 
 async function cleanupOrphans(){
+  if(teacherRole!=='leader'){msg('teacherMsg','error','Hanya Ketua Rombongan dibenarkan membersihkan data tertinggal.');return}
   const warning='Bersihkan data tertinggal?\n\nFungsi ini akan membuang rekod PEMBAYARAN / SENARAI_BAS yang sudah tiada rekod pendaftaran aktif. Sesuai untuk membersihkan data test yang dipadam manual dalam Google Sheet.';
   if(!confirm(warning))return;
   msg('teacherMsg','','');
