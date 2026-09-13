@@ -638,7 +638,7 @@ function applyTeacherRoleUI(){
   if(badge){
     badge.classList.remove('hidden','leader','teacher');
     badge.classList.add(isLeader?'leader':'teacher');
-    badge.textContent=isLeader?'Ketua Rombongan • Akses Penuh':'Guru • Rekod Pembayaran';
+    badge.textContent=isLeader?'Ketua Rombongan • Akses Penuh':'Guru • Lihat Data & Pembayaran';
   }
 
   if(cleanup){
@@ -849,7 +849,10 @@ function renderTeacherTable(){
             <button class="mini-btn delete" onclick="deleteStudentRecord('${esc(r.studentId)}')">🗑 Padam</button>
           `;
         }else{
-          actions=payBtn || '<span class="badge b-green">Bayaran Selesai</span>';
+          actions=`
+            <button class="mini-btn" onclick="openDetail('${esc(r.studentId)}')">Lihat</button>
+            ${payBtn || '<span class="badge b-green">Bayaran Selesai</span>'}
+          `;
         }
 
         return `<tr>
@@ -866,7 +869,7 @@ function renderTeacherTable(){
     : '<tr><td colspan="8">Tiada rekod yang sepadan.</td></tr>';
 }
 function findStudent(id){return teacherDATA.find(x=>String(x.studentId)===String(id))}
-function openDetail(id){if(teacherRole!=='leader'){msg('teacherMsg','error','Akses ini hanya untuk Ketua Rombongan.');return}const r=findStudent(id);if(!r)return;const p=r.payment||{};$('detailBody').innerHTML=`<div class="details"><div class="detail"><small>Nama Murid</small><b>${esc(r.name)}</b></div><div class="detail"><small>Kelas</small><b>${esc(r.kelas)}</b></div><div class="detail"><small>Nama Penjaga</small><b>${esc(r.parentName)}</b></div><div class="detail"><small>Hubungan</small><b>${esc(r.relation)}</b></div><div class="detail"><small>No. Telefon</small><b>${esc(r.phone)}</b></div><div class="detail"><small>No. Kecemasan</small><b>${esc(r.emergencyPhone||'—')}</b></div><div class="detail full"><small>Alamat Penuh</small><div>${esc(r.address)}</div></div><div class="detail"><small>Bayaran</small><b>${money(p.totalPaid||0)} / RM130</b></div><div class="detail"><small>Seat</small><b>${esc(p.bus||'Belum Confirm')} ${p.seatNo?'• Seat '+esc(p.seatNo):''}</b></div></div>`;$('detailModal').classList.remove('hidden')}
+function openDetail(id){const r=findStudent(id);if(!r)return;const p=r.payment||{};$('detailBody').innerHTML=`<div class="details"><div class="detail"><small>Nama Murid</small><b>${esc(r.name)}</b></div><div class="detail"><small>Kelas</small><b>${esc(r.kelas)}</b></div><div class="detail"><small>Nama Penjaga</small><b>${esc(r.parentName)}</b></div><div class="detail"><small>Hubungan</small><b>${esc(r.relation)}</b></div><div class="detail"><small>No. Telefon</small><b>${esc(r.phone)}</b></div><div class="detail"><small>No. Kecemasan</small><b>${esc(r.emergencyPhone||'—')}</b></div><div class="detail full"><small>Alamat Penuh</small><div>${esc(r.address)}</div></div><div class="detail"><small>Bayaran</small><b>${money(p.totalPaid||0)} / RM130</b></div><div class="detail"><small>Seat</small><b>${esc(p.bus||'Belum Confirm')} ${p.seatNo?'• Seat '+esc(p.seatNo):''}</b></div></div>`;$('detailModal').classList.remove('hidden')}
 function openPayment(id){const r=findStudent(id);if(!r)return;const p=r.payment||{},paid=Number(p.totalPaid||0);let choices='';if(paid===0){choices=`<div class="pay-choices"><button class="pay-choice" onclick="confirmPayment('${esc(id)}',65)"><strong>RM65</strong><span>Ansuran pertama — terus lock seat</span></button><button class="pay-choice" onclick="confirmPayment('${esc(id)}',130)"><strong>RM130</strong><span>Bayar penuh terus</span></button></div>`}else if(paid===65){choices=`<button class="pay-choice" style="width:100%" onclick="confirmPayment('${esc(id)}',65)"><strong>RM65</strong><span>Bayaran baki — lengkap RM130</span></button>`}else{choices='<div class="success">Bayaran murid ini telah selesai.</div>'}$('paymentBody').innerHTML=`<div style="margin-bottom:18px"><b style="font-size:19px">${esc(r.name)}</b><div style="color:var(--muted);margin-top:3px">${esc(r.kelas)} • Telah bayar ${money(paid)} • Baki ${money(p.balance??130)}</div></div><div id="payModalMsg"></div>${choices}<p class="help" style="margin-top:16px">Pastikan wang telah diterima sebelum menekan pilihan bayaran. Rekod ini akan dikongsi kepada semua guru melalui dashboard.</p>`;$('paymentModal').classList.remove('hidden')}
 let paymentSubmitting=false;
 
