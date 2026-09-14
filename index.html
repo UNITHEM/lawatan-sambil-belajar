@@ -30,7 +30,10 @@
     .wrap{max-width:1180px;margin:auto;padding:26px 22px 55px}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:15px;margin-bottom:24px}.stat{background:#fff;border:1px solid var(--line);border-radius:18px;padding:19px;box-shadow:0 8px 25px rgba(20,62,103,.05)}.stat small{color:var(--muted);font-weight:700}.stat strong{display:block;font-size:28px;margin-top:6px;color:var(--navy)}.stat-note{display:block;margin-top:5px;color:var(--muted);font-size:11px;line-height:1.35}.stat-registered{border-color:#bdd8ee;background:linear-gradient(180deg,#fff 0%,#f7fbff 100%)}
     .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:21px}.card{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}.card-head{padding:21px 23px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}.card-head h2,.card-head h3{margin:0}.card-body{padding:23px}
     .step{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;font-weight:800}.step-n{width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center}
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:800;color:#344f69}.field input,.field select,.field textarea{width:100%;border:1px solid #cdddea;border-radius:12px;padding:12px 13px;background:#fff;color:var(--ink);outline:none;transition:.15s}.field input:focus,.field select:focus,.field textarea:focus{border-color:#6aa8d8;box-shadow:0 0 0 4px rgba(55,137,201,.10)}.field textarea{min-height:105px;resize:vertical}.help{font-size:12px;color:var(--muted);line-height:1.45}.jpn-info{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#f2f8ff;border:1px solid #cfe2f3;border-radius:14px;padding:12px 14px;color:var(--navy)}.jpn-info b{font-size:13px}.jpn-info span{font-size:12px;color:var(--muted)}.consent{display:flex;gap:12px;align-items:flex-start;background:#f6f9fc;border:1px solid var(--line);border-radius:13px;padding:14px;cursor:pointer}.consent input{flex:none;width:22px;height:22px;margin:2px 0 0 0;accent-color:var(--navy)}.consent span{flex:1;min-width:0;display:block;font-size:14px;line-height:1.6;color:var(--ink);word-break:break-word}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:800;color:#344f69}.field input,.field select,.field textarea{width:100%;border:1px solid #cdddea;border-radius:12px;padding:12px 13px;background:#fff;color:var(--ink);outline:none;transition:.15s}.field input:focus,.field select:focus,.field textarea:focus{border-color:#6aa8d8;box-shadow:0 0 0 4px rgba(55,137,201,.10)}.field textarea{min-height:105px;resize:vertical}.help{font-size:12px;color:var(--muted);line-height:1.45}.jpn-info{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#f2f8ff;border:1px solid #cfe2f3;border-radius:14px;padding:12px 14px;color:var(--navy)}.jpn-info b{font-size:13px}.jpn-info span{font-size:12px;color:var(--muted)}
+    .uppercase-note{font-size:10px;font-weight:800;color:#8a5a00;margin-left:5px;white-space:nowrap}
+    .force-uppercase{text-transform:uppercase}
+.consent{display:flex;gap:12px;align-items:flex-start;background:#f6f9fc;border:1px solid var(--line);border-radius:13px;padding:14px;cursor:pointer}.consent input{flex:none;width:22px;height:22px;margin:2px 0 0 0;accent-color:var(--navy)}.consent span{flex:1;min-width:0;display:block;font-size:14px;line-height:1.6;color:var(--ink);word-break:break-word}
     .side-list{display:grid;gap:13px}.mobile-read-note{display:none}.info-row{display:flex;gap:13px;padding:15px;border:1px solid var(--line);border-radius:15px;background:#fbfdff}.info-icon{width:38px;height:38px;border-radius:11px;background:var(--sky);display:grid;place-items:center;flex:none}.info-row b{display:block;margin-bottom:3px}.info-row span{font-size:13px;color:var(--muted);line-height:1.45}
     .success,.error{border-radius:14px;padding:14px 15px;margin-bottom:15px;font-weight:650;font-size:14px}.success{background:var(--green-bg);color:#116c3d;border:1px solid #bfe6cf}.error{background:var(--red-bg);color:var(--red);border:1px solid #f3c6c2}
     .footer{padding:28px 22px;text-align:center;color:var(--muted);font-size:12px;border-top:1px solid var(--line);background:#fff}
@@ -183,16 +186,16 @@
                 </div>
                 <div class="field"><label>Kelas *</label><select id="kelas" required><option value="">Memuatkan kelas...</option></select></div>
                 <div class="field"><label>Nama Murid *</label><select id="studentId" required disabled><option value="">Pilih kelas dahulu</option></select><div id="studentListStatus" class="help">Senarai nama akan disediakan secara automatik.</div></div>
-                <div class="field"><label>No. Kad Pengenalan / No. Sijil Lahir *</label><input id="identityNo" required autocomplete="off" placeholder="Contoh: 150101-10-1234 / nombor sijil lahir"></div>
-                <div class="field"><label>No. Pasport <span style="font-weight:500;color:var(--muted)">(jika berkaitan)</span></label><input id="passportNo" autocomplete="off" placeholder="Kosongkan jika tiada"></div>
+                <div class="field"><label>No. Kad Pengenalan / No. Sijil Lahir * <span class="uppercase-note">(GUNAKAN HURUF BESAR)</span></label><input class="force-uppercase" id="identityNo" required autocomplete="off" placeholder="Contoh: 150101-10-1234 / nombor sijil lahir"></div>
+                <div class="field"><label>No. Pasport <span style="font-weight:500;color:var(--muted)">(jika berkaitan)</span> <span class="uppercase-note">(GUNAKAN HURUF BESAR)</span></label><input class="force-uppercase" id="passportNo" autocomplete="off" placeholder="Kosongkan jika tiada"></div>
                 <div class="field"><label>Jantina *</label><select id="gender" required><option value="">Pilih jantina</option><option value="LELAKI">LELAKI</option><option value="PEREMPUAN">PEREMPUAN</option></select></div>
                 <div class="field"><label>Tahun / Tingkatan</label><input id="jpnClassDisplay" disabled placeholder="Mengikut kelas yang dipilih"><div class="help">Diambil secara automatik daripada pilihan Kelas.</div></div>
 
-                <div class="field"><label>Nama Ibu / Bapa / Penjaga *</label><input id="parentName" autocomplete="name" required placeholder="Nama penuh penjaga"></div>
+                <div class="field"><label>Nama Ibu / Bapa / Penjaga * <span class="uppercase-note">(GUNAKAN HURUF BESAR)</span></label><input class="force-uppercase" id="parentName" autocomplete="name" required placeholder="Nama penuh penjaga"></div>
                 <div class="field"><label>Hubungan *</label><select id="relation" required><option value="">Pilih hubungan</option><option>IBU</option><option>BAPA</option><option>PENJAGA</option></select></div>
                 <div class="field"><label>No. Telefon / WhatsApp *</label><input id="phone" inputmode="tel" autocomplete="tel" required placeholder="Contoh: 0123456789"></div>
                 <div class="field"><label>No. Telefon Kecemasan</label><input id="emergencyPhone" inputmode="tel" placeholder="Jika berbeza"></div>
-                <div class="field full"><label>Alamat Rumah Penuh *</label><textarea id="address" required placeholder="No. rumah, jalan/taman/kampung, poskod, bandar, negeri"></textarea><div class="help">Alamat diperlukan untuk rekod rasmi lawatan dan rujukan pihak berkuasa sekiranya berlaku kecemasan.</div></div>
+                <div class="field full"><label>Alamat Rumah Penuh * <span class="uppercase-note">(GUNAKAN HURUF BESAR)</span></label><textarea class="force-uppercase" id="address" required placeholder="No. rumah, jalan/taman/kampung, poskod, bandar, negeri"></textarea><div class="help">Alamat diperlukan untuk rekod rasmi lawatan dan rujukan pihak berkuasa sekiranya berlaku kecemasan.</div></div>
                 <div class="field full"><label class="consent"><input type="checkbox" id="consent" required><span>Saya mengesahkan semua maklumat di atas adalah benar dan <b>bersetuju</b> anak / jagaan saya menyertai lawatan ini. Saya juga memahami bahawa pendaftaran sahaja <b>belum mengesahkan seat</b>.</span></label></div>
                 <div class="field full"><button class="btn btn-primary" id="submitReg" type="submit">Hantar Pendaftaran</button></div>
               </div>
@@ -604,6 +607,26 @@ function closeRegistrationSuccess(){
   $('registrationCard').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
+
+const UPPERCASE_FIELDS=['identityNo','passportNo','parentName','address'];
+
+function normalizeUppercaseField(el){
+  if(!el)return;
+  const start=typeof el.selectionStart==='number'?el.selectionStart:null;
+  const end=typeof el.selectionEnd==='number'?el.selectionEnd:null;
+  el.value=el.value.toUpperCase();
+  if(start!==null && end!==null && typeof el.setSelectionRange==='function'){
+    try{el.setSelectionRange(start,end);}catch(_){}
+  }
+}
+
+UPPERCASE_FIELDS.forEach(id=>{
+  const el=$(id);
+  if(!el)return;
+  el.addEventListener('input',()=>normalizeUppercaseField(el));
+  el.addEventListener('blur',()=>normalizeUppercaseField(el));
+});
+
 $('registrationForm').addEventListener('submit',async e=>{
   e.preventDefault();
   if(registrationSubmitting)return;
@@ -613,6 +636,8 @@ $('registrationForm').addEventListener('submit',async e=>{
   const studentSelect=$('studentId');
   const selectedStudentName=studentSelect.options[studentSelect.selectedIndex]?.textContent||'';
   const selectedClass=$('kelas').value||'';
+
+  UPPERCASE_FIELDS.forEach(id=>normalizeUppercaseField($(id)));
 
   const payload={
     action:'register',
