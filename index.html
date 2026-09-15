@@ -83,6 +83,12 @@
     .delete-summary-row b{color:var(--navy);text-align:right}
     .delete-process-note{background:#f4f8fc;border:1px solid var(--line);border-radius:14px;padding:12px 14px;color:#49647d;font-size:13px;line-height:1.55;text-align:left}
     .delete-success-note{background:var(--green-bg);border:1px solid #bfe6cf;border-radius:14px;padding:12px 14px;color:#155f3b;font-size:13px;line-height:1.55;text-align:left}
+    .cleanup-counts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 14px}
+    .cleanup-count{background:#f7fbff;border:1px solid var(--line);border-radius:13px;padding:11px 8px;text-align:center}
+    .cleanup-count strong{display:block;font-size:20px;color:var(--navy)}
+    .cleanup-count small{display:block;margin-top:3px;color:var(--muted);font-size:10px;line-height:1.25}
+    @media(max-width:620px){.cleanup-counts{grid-template-columns:1fr 1fr}.cleanup-count:last-child{grid-column:1/-1}}
+
 
     #paymentModal .close:disabled{opacity:.35;cursor:not-allowed}
     @media(max-width:620px){
@@ -252,6 +258,30 @@
 
         <div class="success-actions">
           <button id="registrationStateBtn" class="btn btn-primary" type="button" onclick="closeRegistrationSuccess()">Baik, Saya Faham</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="cleanupModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="cleanupStateTitle">
+    <div class="success-modal">
+      <div class="success-modal-body">
+        <div id="cleanupStateIcon" class="success-check processing"></div>
+        <h2 id="cleanupStateTitle" class="processing-title">Sedang Membersihkan Data</h2>
+        <p id="cleanupStateLead" class="lead">Sila tunggu sebentar. Sistem sedang menyemak rekod tertinggal dalam Google Sheet.</p>
+
+        <div id="cleanupSummaryBox" class="success-student">
+          <small>Proses</small>
+          <strong>PENDAFTARAN • PEMBAYARAN • SENARAI_BAS</strong>
+        </div>
+
+        <div id="cleanupStateReminder" class="processing-reminder">
+          <b>⏳ Sedang diproses:</b> Jangan tutup popup atau tekan butang pembersihan sekali lagi.
+        </div>
+
+        <div class="success-actions">
+          <button id="cleanupStateBtn" class="btn btn-primary hidden" type="button" onclick="closeCleanupModal()">Selesai</button>
         </div>
       </div>
     </div>
@@ -1552,17 +1582,138 @@ async function deleteStudentRecord(id){
   }
 }
 
+let cleanupSubmitting=false;
+
+function showCleanupModal(){
+  $('cleanupModal').classList.remove('hidden');
+  document.body.style.overflow='hidden';
+}
+
+function closeCleanupModal(){
+  if(cleanupSubmitting)return;
+  $('cleanupModal').classList.add('hidden');
+  document.body.style.overflow='';
+}
+
+function setCleanupPopupState(state,data,message){
+  const icon=$('cleanupStateIcon');
+  const title=$('cleanupStateTitle');
+  const lead=$('cleanupStateLead');
+  const summary=$('cleanupSummaryBox');
+  const reminder=$('cleanupStateReminder');
+  const btn=$('cleanupStateBtn');
+
+  icon.className='success-check';
+  title.className='';
+  btn.className='btn btn-primary';
+  btn.onclick=closeCleanupModal;
+
+  if(state==='processing'){
+    icon.classList.add('processing');
+    icon.textContent='';
+    title.classList.add('processing-title');
+    title.textContent='Sedang Membersihkan Data';
+    lead.textContent='Sila tunggu sebentar. Sistem sedang menyemak rekod tertinggal dalam Google Sheet.';
+    summary.innerHTML='<small>Proses</small><strong>PENDAFTARAN • PEMBAYARAN • SENARAI_BAS</strong>';
+    reminder.className='processing-reminder';
+    reminder.innerHTML='<b>⏳ Sedang diproses:</b> Jangan tutup popup atau tekan butang pembersihan sekali lagi.';
+    btn.classList.add('hidden');
+  }else if(state==='waiting'){
+    icon.classList.add('processing');
+    icon.textContent='';
+    title.classList.add('processing-title');
+    title.textContent='Hampir Selesai…';
+    lead.textContent='Google Sheet masih sedang menyelaraskan rekod. Sila tunggu sebentar lagi.';
+    reminder.className='processing-reminder';
+    reminder.innerHTML='<b>🔄 Masih menyegerakkan:</b> Sistem masih aktif di belakang tabir.';
+    btn.classList.add('hidden');
+  }else if(state==='success'){
+    const jpn=Number(data?.registrationJpnFieldsCleared||0);
+    const pay=Number(data?.paymentRowsCleared||0);
+    const bus=Number(data?.busSeatsCleared||0);
+
+    icon.textContent='✓';
+    title.textContent='Pembersihan Berjaya';
+    lead.textContent='Semua rekod tertinggal yang dikesan telah selesai disemak dan dibersihkan.';
+    summary.innerHTML=`
+      <div class="cleanup-counts">
+        <div class="cleanup-count"><strong>${jpn}</strong><small>Data JPN tertinggal</small></div>
+        <div class="cleanup-count"><strong>${pay}</strong><small>Rekod pembayaran</small></div>
+        <div class="cleanup-count"><strong>${bus}</strong><small>Seat bas dibersihkan</small></div>
+      </div>`;
+    reminder.className='success-reminder';
+    reminder.innerHTML='<b>✅ Selesai.</b> Dashboard akan disegerakkan semula secara automatik di belakang tabir.';
+    btn.classList.remove('hidden');
+    btn.textContent='Selesai';
+  }else{
+    icon.classList.add('error-state');
+    icon.textContent='!';
+    title.classList.add('error-title');
+    title.textContent='Pembersihan Belum Berjaya';
+    lead.textContent=message||'Sambungan ke sistem Google terganggu.';
+    summary.innerHTML='<small>Status</small><strong>Tiada perubahan tambahan akan dibuat sehingga dicuba semula.</strong>';
+    reminder.className='error';
+    reminder.innerHTML='<b>⚠️ Jangan tekan berulang kali.</b> Tutup popup ini dan cuba Refresh dashboard dahulu.';
+    btn.classList.remove('hidden');
+    btn.className='btn btn-soft';
+    btn.textContent='Tutup & Refresh';
+    btn.onclick=function(){
+      $('cleanupModal').classList.add('hidden');
+      document.body.style.overflow='';
+      loadTeacherData(false);
+    };
+  }
+}
+
 async function cleanupOrphans(){
-  if(teacherRole!=='leader'){msg('teacherMsg','error','Hanya Ketua Rombongan dibenarkan membersihkan data tertinggal.');return}
-  const warning='Bersihkan data tertinggal?\n\nFungsi ini akan membuang rekod PEMBAYARAN / SENARAI_BAS yang sudah tiada rekod pendaftaran aktif. Sesuai untuk membersihkan data test yang dipadam manual dalam Google Sheet.';
+  if(teacherRole!=='leader'){
+    msg('teacherMsg','error','Hanya Ketua Rombongan dibenarkan membersihkan data tertinggal.');
+    return;
+  }
+  if(cleanupSubmitting)return;
+
+  const warning='Bersihkan data tertinggal?\n\nFungsi ini akan membuang rekod PEMBAYARAN / SENARAI_BAS yang sudah tiada rekod pendaftaran aktif serta data JPN tertinggal daripada rekod lama.';
   if(!confirm(warning))return;
+
+  cleanupSubmitting=true;
   msg('teacherMsg','','');
+  setCleanupPopupState('processing');
+  showCleanupModal();
+
+  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+
+  const startedAt=Date.now();
+  const waitTimer=setTimeout(()=>{
+    if(cleanupSubmitting)setCleanupPopupState('waiting');
+  },3000);
+
   try{
     const d=await apiPost({action:'cleanupOrphans',pin:teacherPIN});
-    if(!d.ok)throw new Error(d.message||'Pembersihan gagal.');
-    msg('teacherMsg','success',d.message);
-    await loadTeacherData();await loadPublicStats();
-  }catch(e){msg('teacherMsg','error',e.message)}
+    if(!d || !d.ok)throw new Error((d&&d.message)||'Pembersihan gagal.');
+
+    // Spinner dipaparkan minimum 3 saat supaya cikgu nampak proses sedang berjalan.
+    const elapsed=Date.now()-startedAt;
+    if(elapsed<3000)await wait(3000-elapsed);
+
+    clearTimeout(waitTimer);
+    setCleanupPopupState('success',d);
+
+    // Jangan kosongkan table; sync senyap di belakang.
+    setTeacherSync('syncing','Pembersihan selesai — sync latar belakang…');
+    setTimeout(()=>{
+      loadTeacherData(true).then(ok=>{
+        if(ok)setTeacherSync('ready','Data terkini');
+      });
+      loadPublicStats().catch(()=>{});
+    },800);
+  }catch(e){
+    clearTimeout(waitTimer);
+    const elapsed=Date.now()-startedAt;
+    if(elapsed<3000)await wait(3000-elapsed);
+    setCleanupPopupState('error',null,e.message);
+  }finally{
+    cleanupSubmitting=false;
+  }
 }
 
 function closeModal(id){$(id).classList.add('hidden')}
