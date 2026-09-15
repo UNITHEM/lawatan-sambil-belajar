@@ -55,7 +55,7 @@
     @keyframes pulseDot{0%,100%{opacity:.45;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
     .inline-loader{display:inline-flex;align-items:center;gap:9px;color:var(--muted);font-weight:750}
     .inline-loader:before{content:"";width:17px;height:17px;border:2px solid #d5e4f2;border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.search{flex:1;min-width:230px;border:1px solid #cdddea;border-radius:12px;padding:11px 13px}.filter{border:1px solid #cdddea;border-radius:12px;padding:11px 13px;background:#fff}.table-card{background:#fff;border:1px solid var(--line);border-radius:19px;box-shadow:var(--shadow);overflow:hidden}.table-scroll{overflow:auto}.data-table{width:100%;border-collapse:collapse;min-width:970px}.data-table th{background:#f1f6fb;color:#49647d;text-align:left;font-size:12px;padding:12px 14px;white-space:nowrap}.data-table td{border-top:1px solid #edf2f7;padding:13px 14px;font-size:13px;vertical-align:middle}.data-table tr:hover td{background:#fbfdff}.student-name{font-weight:800;color:#173b60}.badge{display:inline-flex;align-items:center;padding:6px 9px;border-radius:99px;font-size:11px;font-weight:850;white-space:nowrap}.b-green{background:var(--green-bg);color:#117340}.b-amber{background:var(--amber-bg);color:#8a5b00}.b-gray{background:#eef2f5;color:#587084}.b-blue{background:#e9f3ff;color:#145f9b}.mini-btn{border:1px solid #ccdeed;background:#fff;color:var(--navy);border-radius:9px;padding:7px 9px;font-weight:800;cursor:pointer}.mini-btn.pay{background:var(--navy);color:#fff;border-color:var(--navy)}.mini-btn.delete{background:#fff0ef;color:var(--red);border-color:#f2b8b3}.mini-btn.delete:hover{background:#fde3e0}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.search{flex:1;min-width:230px;border:1px solid #cdddea;border-radius:12px;padding:11px 13px}.filter{border:1px solid #cdddea;border-radius:12px;padding:11px 13px;background:#fff}.table-card{background:#fff;border:1px solid var(--line);border-radius:19px;box-shadow:var(--shadow);overflow:hidden}.table-scroll{overflow:auto}.data-table{width:100%;border-collapse:collapse;min-width:970px}.data-table th{background:#f1f6fb;color:#49647d;text-align:left;font-size:12px;padding:12px 14px;white-space:nowrap}.data-table td{border-top:1px solid #edf2f7;padding:13px 14px;font-size:13px;vertical-align:middle}.data-table tr:hover td{background:#fbfdff}.student-name{font-weight:800;color:#173b60}.student-name.name-installment{color:#a86700}.student-name.name-full{color:#16804a}.student-name.name-installment::before,.student-name.name-full::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px}.student-name.name-installment::before{background:#e7a21a}.student-name.name-full::before{background:#32a766}.leader-download{background:#edf7ff!important;border-color:#b9d9f2!important;color:#0a4b82!important}.badge{display:inline-flex;align-items:center;padding:6px 9px;border-radius:99px;font-size:11px;font-weight:850;white-space:nowrap}.b-green{background:var(--green-bg);color:#117340}.b-amber{background:var(--amber-bg);color:#8a5b00}.b-gray{background:#eef2f5;color:#587084}.b-blue{background:#e9f3ff;color:#145f9b}.mini-btn{border:1px solid #ccdeed;background:#fff;color:var(--navy);border-radius:9px;padding:7px 9px;font-weight:800;cursor:pointer}.mini-btn.pay{background:var(--navy);color:#fff;border-color:var(--navy)}.mini-btn.delete{background:#fff0ef;color:var(--red);border-color:#f2b8b3}.mini-btn.delete:hover{background:#fde3e0}
     .payment-state{text-align:center;padding:8px 2px 2px}
     .payment-state-icon{width:72px;height:72px;margin:2px auto 17px;border-radius:50%;display:grid;place-items:center;font-size:38px;font-weight:900}
     .payment-state-icon.loading{background:#eaf4ff;border:1px solid #cfe2f3}
@@ -126,7 +126,7 @@
     }
     @media(max-width:1100px){.stats{grid-template-columns:repeat(3,1fr)}}
     @media(max-width:900px){.hero-in,.grid{grid-template-columns:1fr}.destination-grid{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(2,1fr)}.teacher-stats{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:620px){.teacher-hero{padding:22px 0}.teacher-hero-row{flex-direction:column;align-items:stretch;gap:18px}.teacher-hero-copy{width:100%}.teacher-hero h1{font-size:31px;line-height:1.02;margin:10px 0 12px}.teacher-hero-actions{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px}.teacher-hero-actions .btn{width:100%;min-width:0;padding:13px 10px;text-align:center;justify-content:center}.teacher-hero .role-badge{max-width:100%;white-space:normal;line-height:1.3}.teacher-sync{max-width:100%}.teacher-shell{overflow-x:hidden}.teacher-hero .wrap{width:100%;max-width:100%;box-sizing:border-box}.topbar-in{padding:11px 14px;flex-wrap:wrap;align-items:flex-start}.brand{flex:1;min-width:0}.brand b{font-size:14px;line-height:1.25}.brand span{display:none}.nav-actions{margin-left:auto}.nav-actions .btn{padding:10px 14px;border-radius:10px}.hero-in{padding:37px 16px}.destination-grid{grid-template-columns:1fr}.destination-card img{height:230px;object-position:center center}.hero-points{gap:10px}.wrap,.notice{padding-left:14px;padding-right:14px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.stats{grid-template-columns:1fr 1fr;gap:10px}.stats .stat:last-child{grid-column:1/-1}.stat{padding:14px}.stat strong{font-size:23px}.card-head,.card-body{padding:17px}.nav-actions .btn-soft{display:none}.teacher-stats{grid-template-columns:1fr 1fr}.details{grid-template-columns:1fr}.detail.full{grid-column:auto}.pay-choices{grid-template-columns:1fr}.consent{padding:14px}.consent span{font-size:13px;line-height:1.55}.important-card{order:1}.registration-card{order:2}.mobile-read-note{display:block;background:var(--amber-bg);border:1px solid #f2d58a;color:#6f4b00;border-radius:13px;padding:12px 13px;margin-bottom:13px;font-size:13px;line-height:1.5;font-weight:700}}
+    @media(max-width:620px){.teacher-hero{padding:22px 0}.teacher-hero-row{flex-direction:column;align-items:stretch;gap:18px}.teacher-hero-copy{width:100%}.teacher-hero h1{font-size:31px;line-height:1.02;margin:10px 0 12px}.teacher-hero-actions{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px}.teacher-hero-actions .leader-download:not(.hidden){grid-column:1/-1}.teacher-hero-actions .btn{width:100%;min-width:0;padding:13px 10px;text-align:center;justify-content:center}.teacher-hero .role-badge{max-width:100%;white-space:normal;line-height:1.3}.teacher-sync{max-width:100%}.teacher-shell{overflow-x:hidden}.teacher-hero .wrap{width:100%;max-width:100%;box-sizing:border-box}.topbar-in{padding:11px 14px;flex-wrap:wrap;align-items:flex-start}.brand{flex:1;min-width:0}.brand b{font-size:14px;line-height:1.25}.brand span{display:none}.nav-actions{margin-left:auto}.nav-actions .btn{padding:10px 14px;border-radius:10px}.hero-in{padding:37px 16px}.destination-grid{grid-template-columns:1fr}.destination-card img{height:230px;object-position:center center}.hero-points{gap:10px}.wrap,.notice{padding-left:14px;padding-right:14px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.stats{grid-template-columns:1fr 1fr;gap:10px}.stats .stat:last-child{grid-column:1/-1}.stat{padding:14px}.stat strong{font-size:23px}.card-head,.card-body{padding:17px}.nav-actions .btn-soft{display:none}.teacher-stats{grid-template-columns:1fr 1fr}.details{grid-template-columns:1fr}.detail.full{grid-column:auto}.pay-choices{grid-template-columns:1fr}.consent{padding:14px}.consent span{font-size:13px;line-height:1.55}.important-card{order:1}.registration-card{order:2}.mobile-read-note{display:block;background:var(--amber-bg);border:1px solid #f2d58a;color:#6f4b00;border-radius:13px;padding:12px 13px;margin-bottom:13px;font-size:13px;line-height:1.5;font-weight:700}}
   </style>
 </head>
 <body>
@@ -221,7 +221,7 @@
     </div>
 
     <div id="teacherDashboard" class="hidden">
-      <section class="teacher-hero"><div class="wrap"><div class="teacher-hero-row"><div class="teacher-hero-copy"><div class="eyebrow">🔐 PORTAL GURU</div><h1>Dashboard Pengurusan Lawatan</h1><p id="teacherWelcome"></p><div id="teacherRoleBadge" class="role-badge hidden"></div><div id="teacherSync" class="teacher-sync"><span class="teacher-sync-dot"></span><span id="teacherSyncText">Data sedia</span></div></div><div class="teacher-hero-actions"><button class="btn btn-soft" id="teacherRefreshBtn" onclick="loadTeacherData(false)">↻ Refresh</button><button class="btn btn-danger" onclick="teacherLogout()">Keluar</button></div></div></div></section>
+      <section class="teacher-hero"><div class="wrap"><div class="teacher-hero-row"><div class="teacher-hero-copy"><div class="eyebrow">🔐 PORTAL GURU</div><h1>Dashboard Pengurusan Lawatan</h1><p id="teacherWelcome"></p><div id="teacherRoleBadge" class="role-badge hidden"></div><div id="teacherSync" class="teacher-sync"><span class="teacher-sync-dot"></span><span id="teacherSyncText">Data sedia</span></div></div><div class="teacher-hero-actions"><button class="btn btn-soft leader-download hidden" id="leaderDownloadBtn" onclick="downloadLeaderExcel()">⬇ Excel</button><button class="btn btn-soft" id="teacherRefreshBtn" onclick="loadTeacherData(false)">↻ Refresh</button><button class="btn btn-danger" onclick="teacherLogout()">Keluar</button></div></div></div></section>
       <main class="wrap">
         <section class="stats teacher-stats"><div class="stat"><small>Berdaftar</small><strong id="tRegistered">0</strong></div><div class="stat"><small>Seat Confirmed</small><strong id="tConfirmed">0</strong></div><div class="stat"><small>Tempat Kosong</small><strong id="tAvailable">74</strong></div><div class="stat"><small>Bayar Penuh</small><strong id="tFullPaid">0</strong></div><div class="stat"><small>Jumlah Kutipan</small><strong id="tCollected" style="font-size:23px">RM0</strong></div></section>
         <div class="toolbar"><input id="searchStudent" class="search" placeholder="Cari nama murid / kelas / penjaga..." oninput="renderTeacherTable()"><select id="paymentFilter" class="filter" onchange="renderTeacherTable()"><option value="ALL">Semua Status</option><option value="UNPAID">Belum Bayar</option><option value="INSTALLMENT">Ansuran RM65</option><option value="FULL">Bayar Penuh</option><option value="CONFIRMED">Seat Confirmed</option></select><select id="classFilter" class="filter" onchange="renderTeacherTable()"><option value="ALL">Semua Kelas</option></select><button id="leaderCleanupBtn" class="btn btn-soft hidden" onclick="cleanupOrphans()">🧹 Bersihkan Data Tertinggal</button></div>
@@ -694,6 +694,7 @@ function applyTeacherRoleUI(){
   const isLeader=teacherRole==='leader';
   const badge=$('teacherRoleBadge');
   const cleanup=$('leaderCleanupBtn');
+  const downloadBtn=$('leaderDownloadBtn');
 
   if(badge){
     badge.classList.remove('hidden','leader','teacher');
@@ -703,6 +704,10 @@ function applyTeacherRoleUI(){
 
   if(cleanup){
     cleanup.classList.toggle('hidden',!isLeader);
+  }
+
+  if(downloadBtn){
+    downloadBtn.classList.toggle('hidden',!isLeader);
   }
 
   // Tindakan setiap row bergantung pada role.
@@ -763,6 +768,9 @@ function teacherLogout(){
 
   const cleanup=$('leaderCleanupBtn');
   if(cleanup)cleanup.classList.add('hidden');
+
+  const downloadBtn=$('leaderDownloadBtn');
+  if(downloadBtn)downloadBtn.classList.add('hidden');
 
   msg('loginMsg','','');
 }
@@ -916,7 +924,7 @@ function renderTeacherTable(){
         }
 
         return `<tr>
-          <td><div class="student-name">${esc(r.name)}</div><small style="color:var(--muted)">${esc(r.studentId)}</small></td>
+          <td><div class="student-name ${paid>=130?'name-full':paid>=65?'name-installment':''}">${esc(r.name)}</div><small style="color:var(--muted)">${esc(r.studentId)}</small></td>
           <td>${esc(r.kelas)}</td>
           <td>${payBadge}<div style="margin-top:5px;font-weight:800">${money(paid)}</div></td>
           <td>${money(bal)}</td>
@@ -928,6 +936,143 @@ function renderTeacherTable(){
       }).join('')
     : '<tr><td colspan="8">Tiada rekod yang sepadan.</td></tr>';
 }
+
+let xlsxLoaderPromise=null;
+
+function ensureXlsxLibrary(){
+  if(window.XLSX)return Promise.resolve(window.XLSX);
+  if(xlsxLoaderPromise)return xlsxLoaderPromise;
+
+  xlsxLoaderPromise=new Promise((resolve,reject)=>{
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+    s.async=true;
+    s.onload=()=>window.XLSX?resolve(window.XLSX):reject(new Error('Library Excel tidak dapat dimuatkan.'));
+    s.onerror=()=>reject(new Error('Sambungan untuk fungsi Excel tidak tersedia.'));
+    document.head.appendChild(s);
+  });
+
+  return xlsxLoaderPromise;
+}
+
+function formatExportDate(value){
+  if(!value)return '';
+  const d=new Date(value);
+  if(Number.isNaN(d.getTime()))return String(value);
+  return d.toLocaleString('ms-MY',{
+    year:'numeric',month:'2-digit',day:'2-digit',
+    hour:'2-digit',minute:'2-digit'
+  });
+}
+
+function exportPaymentLabel(paid){
+  paid=Number(paid||0);
+  if(paid>=130)return 'BAYAR PENUH';
+  if(paid>=65)return 'ANSURAN RM65';
+  return 'BELUM BAYAR';
+}
+
+async function downloadLeaderExcel(){
+  if(teacherRole!=='leader'){
+    msg('teacherMsg','error','Hanya Ketua Rombongan dibenarkan memuat turun senarai Excel.');
+    return;
+  }
+
+  if(!teacherDATA.length){
+    msg('teacherMsg','error','Tiada data murid untuk dimuat turun.');
+    return;
+  }
+
+  const btn=$('leaderDownloadBtn');
+  const original=btn?btn.innerHTML:'⬇ Excel';
+
+  if(btn){
+    btn.disabled=true;
+    btn.innerHTML='<span class="spinner"></span> Sediakan Excel';
+  }
+
+  try{
+    const XLSX=await ensureXlsxLibrary();
+
+    const rows=teacherDATA
+      .slice()
+      .sort((a,b)=>{
+        const kc=String(a.kelas||'').localeCompare(String(b.kelas||''),'ms',{numeric:true});
+        if(kc!==0)return kc;
+        return String(a.name||'').localeCompare(String(b.name||''),'ms');
+      })
+      .map((r,index)=>{
+        const p=r.payment||{};
+        const paid=Number(p.totalPaid||0);
+
+        return {
+          'Bil':index+1,
+          'Nama Murid':r.name||'',
+          'Kelas':r.kelas||'',
+          'No. Kad Pengenalan / No. Sijil Lahir':r.identityNo||'',
+          'No. Pasport':r.passportNo||'',
+          'Jantina':r.gender||'',
+          'Nama Ibu / Bapa / Penjaga':r.parentName||'',
+          'Hubungan':r.relation||'',
+          'No. Telefon / WhatsApp':r.phone||'',
+          'No. Telefon Kecemasan':r.emergencyPhone||'',
+          'Alamat Rumah Penuh':r.address||'',
+          'Tarikh Pendaftaran':formatExportDate(r.registeredAt),
+          'Bayaran (RM)':paid,
+          'Baki (RM)':Number(p.balance??Math.max(0,130-paid)),
+          'Status Bayaran':exportPaymentLabel(paid),
+          'Status Seat':p.seatStatus||'BELUM CONFIRM',
+          'Bas':p.bus||'',
+          'No. Seat':p.seatNo||'',
+          'Disahkan Oleh':p.verifiedBy||'',
+          'Semakan Manual':'',
+          'Catatan Manual':''
+        };
+      });
+
+    const ws=XLSX.utils.json_to_sheet(rows);
+    ws['!cols']=[
+      {wch:6},{wch:32},{wch:14},{wch:24},{wch:16},{wch:12},
+      {wch:30},{wch:14},{wch:20},{wch:22},{wch:45},{wch:20},
+      {wch:14},{wch:12},{wch:18},{wch:18},{wch:12},{wch:10},
+      {wch:20},{wch:18},{wch:28}
+    ];
+    ws['!autofilter']={ref:`A1:U${rows.length+1}`};
+    ws['!freeze']={xSplit:0,ySplit:1};
+
+    const summary=[
+      ['RINGKASAN LAWATAN SAMBIL BELAJAR 2026',''],
+      ['Tarikh Muat Turun',new Date().toLocaleString('ms-MY')],
+      ['Jumlah Berdaftar',teacherDATA.length],
+      ['Seat Disahkan',Number(teacherSTATS.confirmed||0)],
+      ['Bayar Penuh',Number(teacherSTATS.fullPaid||0)],
+      ['Jumlah Kutipan (RM)',Number(teacherSTATS.totalCollected||0)],
+      ['Disediakan Oleh',currentTeacher||'Ketua Rombongan']
+    ];
+
+    const wsSummary=XLSX.utils.aoa_to_sheet(summary);
+    wsSummary['!cols']=[{wch:28},{wch:30}];
+
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,'Senarai Murid');
+    XLSX.utils.book_append_sheet(wb,wsSummary,'Ringkasan');
+
+    const now=new Date();
+    const pad=n=>String(n).padStart(2,'0');
+    const filename=`Senarai_Murid_Lawatan_2026_${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}.xlsx`;
+
+    XLSX.writeFile(wb,filename,{compression:true});
+    msg('teacherMsg','success','Fail Excel senarai murid berjaya disediakan.');
+  }catch(e){
+    msg('teacherMsg','error',e.message||'Gagal menyediakan fail Excel.');
+  }finally{
+    if(btn){
+      btn.disabled=false;
+      btn.innerHTML=original;
+    }
+  }
+}
+
 function findStudent(id){return teacherDATA.find(x=>String(x.studentId)===String(id))}
 function openDetail(id){const r=findStudent(id);if(!r)return;const p=r.payment||{};$('detailBody').innerHTML=`<div class="details"><div class="detail"><small>Nama Murid</small><b>${esc(r.name)}</b></div><div class="detail"><small>Kelas / Tahun</small><b>${esc(r.kelas)}</b></div><div class="detail"><small>No. Kad Pengenalan / No. Sijil Lahir</small><b>${esc(r.identityNo||'—')}</b></div><div class="detail"><small>No. Pasport</small><b>${esc(r.passportNo||'—')}</b></div><div class="detail"><small>Jantina</small><b>${esc(r.gender||'—')}</b></div><div class="detail"><small>Nama Penjaga</small><b>${esc(r.parentName)}</b></div><div class="detail"><small>Hubungan</small><b>${esc(r.relation)}</b></div><div class="detail"><small>No. Telefon</small><b>${esc(r.phone)}</b></div><div class="detail"><small>No. Kecemasan</small><b>${esc(r.emergencyPhone||'—')}</b></div><div class="detail full"><small>Alamat Penuh</small><div>${esc(r.address)}</div></div><div class="detail"><small>Bayaran</small><b>${money(p.totalPaid||0)} / RM130</b></div><div class="detail"><small>Seat</small><b>${esc(p.bus||'Belum Confirm')} ${p.seatNo?'• Seat '+esc(p.seatNo):''}</b></div></div>`;$('detailModal').classList.remove('hidden')}
 function openPayment(id){const r=findStudent(id);if(!r)return;const p=r.payment||{},paid=Number(p.totalPaid||0);let choices='';if(paid===0){choices=`<div class="pay-choices"><button class="pay-choice" onclick="confirmPayment('${esc(id)}',65)"><strong>RM65</strong><span>Ansuran pertama — terus lock seat</span></button><button class="pay-choice" onclick="confirmPayment('${esc(id)}',130)"><strong>RM130</strong><span>Bayar penuh terus</span></button></div>`}else if(paid===65){choices=`<button class="pay-choice" style="width:100%" onclick="confirmPayment('${esc(id)}',65)"><strong>RM65</strong><span>Bayaran baki — lengkap RM130</span></button>`}else{choices='<div class="success">Bayaran murid ini telah selesai.</div>'}$('paymentBody').innerHTML=`<div style="margin-bottom:18px"><b style="font-size:19px">${esc(r.name)}</b><div style="color:var(--muted);margin-top:3px">${esc(r.kelas)} • Telah bayar ${money(paid)} • Baki ${money(p.balance??130)}</div></div><div id="payModalMsg"></div>${choices}<p class="help" style="margin-top:16px">Pastikan wang telah diterima sebelum menekan pilihan bayaran. Rekod ini akan dikongsi kepada semua guru melalui dashboard.</p>`;$('paymentModal').classList.remove('hidden')}
